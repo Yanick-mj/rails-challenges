@@ -2,6 +2,20 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
       <div class="card shadow-sm p-3 mb-5 rounded">
+        <!-- Bouton d'action -->
+        <div class="d-flex mb-2">
+          <div class="back-button">
+            <%= link_to challenges_path, class: "btn btn-outline-secondary" do %>
+              <i class="fas fa-arrow-left me-2"></i>Challenges
+            <% end %>
+          </div>
+          <div class="edit-button flex-grow-1 text-end">
+            <%= link_to edit_challenge_path(@challenge), class: "btn btn-outline-secondary" do %>
+              <i class="fas fa-edit me-2"></i>Edit
+            <% end %>
+          </div>
+        </div>
+
         <!-- Header de la carte -->
         <div class="card-header bg-primary text-white py-4">
           <div class="d-flex justify-content-between align-items-center">
@@ -10,10 +24,8 @@
               <%= @challenge.name %>
             </h1>
             <div class="badge bg-light text-primary fs-6 px-3 py-2">
-              status
+              <i class="fas fa-info-circle me-1"></i>Status
             </div>
-            
-
           </div>
         </div>
 

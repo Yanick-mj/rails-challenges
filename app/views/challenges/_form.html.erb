@@ -1,0 +1,44 @@
+<%= form_with(model: @challenge, local: true) do |form| %>
+  <% if @challenge.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(@challenge.errors.count, "erreur") %> :</h4>
+      <ul>
+        <% @challenge.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, "Nom du challenge", class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "Entrez le nom du challenge" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description, "Description", class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Décrivez le challenge" %>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= form.label :start_date, "Date de début", class: "form-label" %>
+        <%= form.date_field :start_date, class: "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= form.label :end_date, "Date de fin", class: "form-label" %>
+        <%= form.date_field :end_date, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-3">
+    <%= link_to challenges_path, class: "btn btn-outline-secondary" do %>
+      <i class="fas fa-arrow-left me-2"></i>Annuler
+    <% end %>
+    <%= form.submit @challenge.new_record? ? "Créer le challenge" : "Mettre à jour", class: "btn btn-primary" %>
+  </div>
+<% end %>

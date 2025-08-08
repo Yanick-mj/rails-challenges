@@ -1,5 +1,5 @@
-// Sassy
-@import "bootstrap";
+// Bootstrap est maintenant chargé via CDN, pas besoin d'import
+// @import "bootstrap";
 
 // Styles personnalisés pour les challenges
 .card {
@@ -18,9 +18,94 @@
   background-color: #f8f9fa !important;
 }
 
+// Styles pour les icônes FontAwesome
+.fas, .far, .fab {
+  &.me-2 {
+    margin-right: 0.5rem;
+  }
+
+  &.me-3 {
+    margin-right: 1rem;
+  }
+
+  &.me-1 {
+    margin-right: 0.25rem;
+  }
+}
+
+// Amélioration des boutons avec icônes
+.btn {
+  i {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover i {
+    transform: scale(1.1);
+  }
+}
+
+// Styles pour les boutons de tri
+.btn-group .btn {
+  border-radius: 0;
+
+  &:first-child {
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+  }
+
+  &:last-child {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+  }
+
+  &.active {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .card-body {
     padding: 1.5rem !important;
+  }
+
+  .btn-group {
+    width: 100%;
+
+    .btn {
+      flex: 1;
+    }
+  }
+}
+
+// Styles pour le load more
+.challenge-item {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#load-more-btn {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
 }
