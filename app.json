@@ -6,7 +6,7 @@
   "keywords": ["rails", "ruby", "challenges"],
   "image": "heroku/ruby",
   "addons": [
-    "heroku-postgresql:basic"
+    "heroku-postgresql:essential-0"
   ],
   "env": {
     "RAILS_MASTER_KEY": {

@@ -1,5 +1,8 @@
 source "https://rubygems.org"
 
+# Utiliser votre version Ruby locale
+ruby "3.3.5"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
@@ -16,13 +19,10 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-gem "faker"
-# gem "bootstrap", "~> 5.3.0"  # Commenté car nous utilisons CDN
-# gem "dartsass-rails"  # Commenté car nous utilisons CDN
-
 # Authentication
 gem "devise"
-
+# Use Redis for caching and sessions
+gem "redis", "~> 5.0"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
