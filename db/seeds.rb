@@ -1,9 +1,16 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+require "faker"
+
+Challenge.destroy_all
+
+15.times do |i|
+  start_date = Faker::Date.forward(days: rand(0..30))
+  end_date = start_date + rand(1..10).days
+
+  Challenge.create!(
+    name: "Challenge #{i + 1}",
+    description: "This is the description for challenge #{i + 1}.",
+    start_date: start_date,
+    end_date: end_date
+  )
+end
+puts "Created #{Challenge.count} challenges."
