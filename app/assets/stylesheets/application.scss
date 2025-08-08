@@ -109,3 +109,45 @@
     cursor: not-allowed;
   }
 }
+
+// Styles pour toutes les pages Devise
+.devise-form {
+  .container {
+    max-width: 500px;
+    margin: 2rem auto;
+  }
+
+  h2 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .field {
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-control {
+      border-radius: 0.375rem;
+
+      &:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      }
+    }
+  }
+
+  .actions {
+    margin-top: 1.5rem;
+    text-align: center;
+
+    .btn {
+      min-width: 120px;
+    }
+  }
+}

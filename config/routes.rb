@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  devise_for :users
+
   resources :challenges
-  # ... autres routes
+
+  root "challenges#index"
 end

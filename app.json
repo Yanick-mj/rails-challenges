@@ -1,0 +1,28 @@
+{
+  "name": "Rails Challenge",
+  "description": "A Rails application for managing challenges",
+  "repository": "https://github.com/yourusername/rails-challenge",
+  "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/main/public/node.svg",
+  "keywords": ["rails", "ruby", "challenges"],
+  "image": "heroku/ruby",
+  "addons": [
+    "heroku-postgresql:basic"
+  ],
+  "env": {
+    "RAILS_MASTER_KEY": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "secret"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}
