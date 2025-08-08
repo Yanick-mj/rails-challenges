@@ -1,0 +1,24 @@
+
+<div class="container mt-5">
+
+  <h2 class="mb-4">Challenges</h2>
+  <% if @challenges.empty? %>
+    <p>No challenges available at the moment.</p>
+  <% else %>
+      <% @challenges.each do |challenge| %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title"><%= challenge.name %></h5>
+            <p class="card-text"><%= challenge.description %></p>
+            <p class="card-text">
+              <span class="me-4">Start Date: <%= challenge.start_date %></span>
+              <span>End Date: <%= challenge.end_date %></span>
+            </p>
+            <%= link_to "Show", challenge, class: "btn btn-secondary" %>
+          </div>
+        </div>
+      <% end %>
+      </div>
+  <% end %>
+
+</div>

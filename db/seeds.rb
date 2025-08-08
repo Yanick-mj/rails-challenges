@@ -8,7 +8,7 @@ Challenge.destroy_all
 
   Challenge.create!(
     name: "Challenge #{i + 1}",
-    description: "This is the description for challenge #{i + 1}.",
+    description: "This is the description for challenge #{i + 1}",
     start_date: start_date,
     end_date: end_date
   )
