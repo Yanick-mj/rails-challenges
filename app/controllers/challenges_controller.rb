@@ -4,18 +4,22 @@ class ChallengesController < ApplicationController
 
   def index
     sort_direction = params[:sort] == "desc" ? :desc : :asc
-    @challenges = Challenge.order(start_date: sort_direction)
+    @challenges = policy_scope(Challenge).order(start_date: sort_direction)
   end
 
   def show
+    authorize @challenge
   end
 
   def new
     @challenge = Challenge.new
+    authorize @challenge
   end
 
   def create
     @challenge = Challenge.new(challenge_params)
+    @challenge.user = current_user
+    authorize @challenge
     if @challenge.save
       redirect_to @challenge, notice: "created !"
     else
@@ -24,9 +28,11 @@ class ChallengesController < ApplicationController
   end
 
   def edit
+    authorize @challenge
   end
 
   def update
+    authorize @challenge
     if @challenge.update(challenge_params)
       redirect_to @challenge, notice: "Updated !"
     else
