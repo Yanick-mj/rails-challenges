@@ -10,8 +10,10 @@
             <% end %>
           </div>
           <div class="edit-button flex-grow-1 text-end">
-            <%= link_to edit_challenge_path(@challenge), class: "btn btn-outline-secondary" do %>
-              <i class="fas fa-edit me-2"></i>Edit
+            <% if policy(@challenge).update? %>
+              <%= link_to edit_challenge_path(@challenge), class: "btn btn-outline-secondary" do %>
+                <i class="fas fa-edit me-2"></i>Edit
+              <% end %>
             <% end %>
           </div>
         </div>

@@ -14,4 +14,7 @@ class ChallengePolicy < ApplicationPolicy
   def update?
     user.present? && record.user == user
   end
+  def edit?
+    user.present? && record.user == user
+  end
 end

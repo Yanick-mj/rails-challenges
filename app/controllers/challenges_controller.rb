@@ -2,9 +2,17 @@ class ChallengesController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
   before_action :set_challenge, only: [ :show, :update, :edit ]
 
-  def index
+    def index
     sort_direction = params[:sort] == "desc" ? :desc : :asc
     @challenges = policy_scope(Challenge).order(start_date: sort_direction)
+
+    # Filtre pour afficher uniquement les challenges de l'utilisateur connecté
+    if user_signed_in? && params[:owner] == "me"
+      @challenges = @challenges.where(user: current_user)
+      @page_title = "Mes Challenges"
+    else
+      @page_title = "Challenges"
+    end
   end
 
   def show
