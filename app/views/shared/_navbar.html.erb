@@ -11,7 +11,8 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <% if user_signed_in? %>
-          <li class="nav-item dropdown">
+          <!-- Desktop: Dropdown -->
+          <li class="nav-item dropdown d-none d-lg-block">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
               <%= icon('user') %><%= user_display_name(current_user) %>
             </a>
@@ -21,6 +22,28 @@
               <li><hr class="dropdown-divider"></li>
               <li><%= button_to "Log out", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
             </ul>
+          </li>
+
+          <!-- Mobile: Options dans le menu hamburger -->
+          <li class="nav-item d-lg-none">
+            <div class="mobile-user-header">
+              <%= icon('user') %><%= user_display_name(current_user) %>
+            </div>
+          </li>
+          <li class="nav-item d-lg-none">
+            <%= link_to edit_user_registration_path, class: "nav-link" do %>
+              <%= icon('user-edit') %>Profile
+            <% end %>
+          </li>
+          <li class="nav-item d-lg-none">
+            <%= link_to challenges_path(owner: "me"), class: "nav-link" do %>
+              <%= icon('list') %>Mes Challenges
+            <% end %>
+          </li>
+          <li class="nav-item d-lg-none">
+            <%= button_to destroy_user_session_path, method: :delete, class: "nav-link mobile-logout-btn" do %>
+              <%= icon('sign-out-alt') %>Log out
+            <% end %>
           </li>
         <% else %>
           <li class="nav-item me-2">
