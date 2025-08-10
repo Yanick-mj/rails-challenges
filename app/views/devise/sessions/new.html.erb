@@ -1,0 +1,50 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">
+        <%= icon('sign-in-alt', 'fa-2x') %>
+      </div>
+      <h2>Connexion</h2>
+      <p class="auth-subtitle">Connectez-vous à votre compte Rails Challenge</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-text">
+            <%= icon('envelope') %>
+          </span>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email",
+              class: "form-control", placeholder: "Votre email" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-text">
+            <%= icon('lock') %>
+          </span>
+          <%= f.password_field :password, autocomplete: "current-password",
+              class: "form-control", placeholder: "Votre mot de passe" %>
+        </div>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="form-group">
+          <div class="form-check">
+            <%= f.check_box :remember_me, class: "form-check-input" %>
+            <%= f.label :remember_me, "Se souvenir de moi", class: "form-check-label" %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.submit "Se connecter", class: "btn btn-primary btn-auth" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>

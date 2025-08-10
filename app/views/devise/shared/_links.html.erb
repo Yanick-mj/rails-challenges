@@ -1,0 +1,53 @@
+<div class="auth-links-container">
+  <%- if controller_name != 'sessions' %>
+    <div class="auth-link-item">
+      <%= link_to new_session_path(resource_name), class: "auth-link" do %>
+        <%= icon('sign-in-alt') %>Se connecter
+      <% end %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+    <div class="auth-link-item">
+      <%= link_to new_registration_path(resource_name), class: "auth-link" do %>
+        <%= icon('user-plus') %>Créer un compte
+      <% end %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+    <div class="auth-link-item">
+      <%= link_to new_password_path(resource_name), class: "auth-link" do %>
+        <%= icon('key') %>Mot de passe oublié ?
+      <% end %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <div class="auth-link-item">
+      <%= link_to new_confirmation_path(resource_name), class: "auth-link" do %>
+        <%= icon('envelope') %>Instructions de confirmation
+      <% end %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+    <div class="auth-link-item">
+      <%= link_to new_unlock_path(resource_name), class: "auth-link" do %>
+        <%= icon('unlock') %>Instructions de déverrouillage
+      <% end %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.omniauthable? %>
+    <%- resource_class.omniauth_providers.each do |provider| %>
+      <div class="auth-link-item">
+        <%= button_to omniauth_authorize_path(resource_name, provider),
+            class: "auth-link auth-oauth-btn",
+            data: { turbo: false } do %>
+          <%= icon('external-link-alt') %>Se connecter avec <%= OmniAuth::Utils.camelize(provider) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
