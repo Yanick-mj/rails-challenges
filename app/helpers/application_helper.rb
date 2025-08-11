@@ -9,6 +9,22 @@ module ApplicationHelper
     user.email.split("@").first
   end
 
+  # Helper pour les classes CSS des messages flash
+  def flash_class(type)
+    case type.to_sym
+    when :notice, :success
+      "success"
+    when :error, :alert
+      "danger"
+    when :warning
+      "warning"
+    when :info
+      "info"
+    else
+      "primary"
+    end
+  end
+
   # Composants CTA unifiés et DRY
   def cta_button(text, url = nil, options = {})
     variant = options.delete(:variant) || :primary
