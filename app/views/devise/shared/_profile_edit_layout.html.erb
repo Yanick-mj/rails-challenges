@@ -1,0 +1,105 @@
+<div class="auth-pages">
+  <div class="auth-container d-flex justify-content-center mt-5 rounded">
+    <div class="auth-card shadow-lg width-600 p-4 d-flex flex-column align-items-center mt-5 text-center">
+          <div class="d-flex align-items-center justify-content-start w-100 mb-4">
+            <%= action_button :back, :back, "Retour" %>
+          </div>
+      <div class="auth-header mb-4 d-flex flex-column align-items-center">
+        <!-- Bouton retour et icône avec espacement approprié -->
+        <div class="d-flex justify-content-between  ">
+          <div class="d-flex justify-content-center">
+            <%= icon('user-edit', 'fa-2x') %>
+          </div>
+          <div class="flex-grow-1"></div> <!-- Espace vide pour équilibrer -->
+          </div>
+        <h2>Modifier le profil</h2>
+        <p class="auth-subtitle">Mettez à jour vos informations personnelles</p>
+      </div>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="form-group mb-3 ">
+          <div class="input-group">
+            <span class="input-group-text">
+              <%= icon('envelope') %>
+            </span>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email",
+                class: "form-control", placeholder: "Votre email" %>
+          </div>
+        </div>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            En attente de confirmation pour : <strong><%= resource.unconfirmed_email %></strong>
+          </div>
+        <% end %>
+
+        <div class="form-group mb-3 ">
+          <div class="input-group">
+            <span class="input-group-text">
+              <%= icon('lock') %>
+            </span>
+            <%= f.password_field :password, autocomplete: "new-password",
+                class: "form-control", placeholder: "Nouveau mot de passe (optionnel)" %>
+          </div>
+          <% if @minimum_password_length %>
+            <small class="form-text text-muted ">
+              <i class="fas fa-info-circle me-1"></i>
+              <%= @minimum_password_length %> caractères minimum
+            </small>
+          <% end %>
+        </div>
+
+        <div class="form-group mb-3 ">
+          <div class="input-group">
+            <span class="input-group-text">
+              <%= icon('lock') %>
+            </span>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password",
+                class: "form-control", placeholder: "Confirmer le nouveau mot de passe" %>
+          </div>
+        </div>
+
+        <div class="form-group mb-3 ">
+          <div class="input-group">
+            <span class="input-group-text">
+              <%= icon('key') %>
+            </span>
+            <%= f.password_field :current_password, autocomplete: "current-password",
+                class: "form-control", placeholder: "Mot de passe actuel (requis)" %>
+          </div>
+          <small class="form-text text-muted">
+            <i class="fas fa-shield-alt me-1"></i>
+            Nous avons besoin de votre mot de passe actuel pour confirmer les modifications
+          </small>
+        </div>
+
+        <div class="form-group mb-3 ">
+          <%= cta_submit "Mettre à jour", variant: :primary, icon: "save" %>
+        </div>
+      <% end %>
+
+
+
+
+
+        <div class="danger-zone-content">
+          <p class="text-muted mb-3">
+            Mécontent de votre compte ?
+            <br>Vous pouvez le supprimer définitivement. <br>
+          </p>
+
+          <%= action_button :delete, registration_path(resource_name), "Supprimer mon compte",
+              method: :delete,
+              size: :sm,
+              data: {
+                confirm: "Êtes-vous sûr ? Cette action est irréversible.",
+                turbo_confirm: "Êtes-vous sûr ? Cette action est irréversible."
+              } %>
+        </div>
+      </div>
+    </div>
+</div>
+</div>

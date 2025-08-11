@@ -36,9 +36,7 @@
   </div>
 
   <div class="d-flex gap-3">
-    <%= link_to challenges_path, class: "btn btn-outline-secondary" do %>
-      <i class="fas fa-arrow-left me-2"></i>Annuler
-    <% end %>
-    <%= form.submit @challenge.new_record? ? "Créer le challenge" : "Mettre à jour", class: "btn btn-primary" %>
+    <%= action_button :cancel, challenges_path, "Annuler" %>
+    <%= cta_submit @challenge.new_record? ? "Créer le challenge" : "Mettre à jour", variant: :primary, icon: @challenge.new_record? ? "plus" : "save" %>
   </div>
 <% end %>

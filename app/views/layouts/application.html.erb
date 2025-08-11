@@ -28,7 +28,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= 'devise-form' if controller_name == 'devise/sessions' || controller_name == 'devise/registrations' %>">
+  <body class="<%= 'auth-pages' if controller_name == 'sessions' || controller_name == 'registrations' || controller_name == 'passwords' || controller_name.start_with?('devise/') %>">
     <%= render 'shared/navbar' %>
     <%= render 'shared/flash_messages' %>
     <%= yield %>

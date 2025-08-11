@@ -1,0 +1,70 @@
+<div class="auth-pages">
+  <div class="auth-container d-flex justify-content-center" >
+    <div class="auth-card shadow-lg max-width-600 p-4 d-flex flex-column align-items-center mt-5 text-center">
+      <div class="auth-header">
+        <h2 class="my-4"><%= title %></h2>
+        <% if subtitle.present? %>
+          <p class="auth-subtitle"><%= subtitle %></p>
+        <% end %>
+      </div>
+
+      <%= form_for(resource, as: resource_name, url: form_url, html: { class: "auth-form" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource if show_errors %>
+
+        <div class="form-group mb-3 ">
+          <div class="input-group">
+            <span class="input-group-text">
+              <%= icon('envelope') %>
+            </span>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email",
+                class: "form-control", placeholder: "Votre email" %>
+          </div>
+        </div>
+
+        <div class="form-group mb-3 ">
+          <div class="input-group">
+            <span class="input-group-text">
+              <%= icon('lock') %>
+            </span>
+            <%= f.password_field :password, autocomplete: password_autocomplete,
+                class: "form-control", placeholder: password_placeholder %>
+          </div>
+          <% if show_password_hint %>
+            <small class="form-text text-muted">
+              <%= @minimum_password_length %> caractères minimum
+            </small>
+          <% end %>
+        </div>
+
+        <% if show_password_confirmation %>
+          <div class="form-group mb-3">
+            <div class="input-group">
+              <span class="input-group-text">
+                <%= icon('lock') %>
+              </span>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password",
+                  class: "form-control", placeholder: "Confirmer le mot de passe" %>
+            </div>
+          </div>
+        <% end %>
+
+        <% if show_remember_me %>
+          <div class="form-group">
+            <div class="form-check">
+              <%= f.check_box :remember_me, class: "form-check-input" %>
+              <%= f.label :remember_me, "Se souvenir de moi", class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-group my-3 w-100 d-flex justify-content-center">
+          <%= cta_submit submit_text, variant: :primary %>
+        </div>
+      <% end %>
+
+      <div class="auth-links my-3">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,21 +3,15 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><%= @page_title %></h2>
     <div class="create-button">
-      <%= link_to new_challenge_path, class: "btn btn-primary" do %>
-        <i class="fas fa-plus me-2"></i> Challenge
-      <% end %>
+      <%= action_button :create, new_challenge_path, "Challenge" %>
     </div>
   </div>
 
   <!-- Options de tri simples -->
   <div class="mb-3">
     <div class="btn-group" role="group">
-      <%= link_to challenges_path(sort: 'asc'), class: "btn btn-outline-secondary #{params[:sort] != 'desc' ? 'active' : ''}" do %>
-        <i class="fas fa-sort-amount-up me-1"></i> Ancien
-      <% end %>
-      <%= link_to challenges_path(sort: 'desc'), class: "btn btn-outline-secondary #{params[:sort] == 'desc' ? 'active' : ''}" do %>
-        <i class="fas fa-sort-amount-down me-1"></i> Récent
-      <% end %>
+      <%= sort_button :asc, challenges_path(sort: 'asc'), class: params[:sort] != 'desc' ? 'active' : '' %>
+      <%= sort_button :desc, challenges_path(sort: 'desc'), class: params[:sort] == 'desc' ? 'active' : '' %>
     </div>
   </div>
 
@@ -40,9 +34,7 @@
               End Date: <%= challenge.end_date&.strftime("%d/%m/%Y") %>
             </span>
           </p>
-          <%= link_to challenge, class: "btn btn-secondary" do %>
-            <i class="fas fa-eye me-1"></i> Read more
-          <% end %>
+          <%= action_button :view, challenge, "Read more" %>
         </div>
       </div>
     <% end %>

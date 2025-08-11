@@ -26,11 +26,6 @@
 
           <!-- Mobile: Options dans le menu hamburger -->
           <li class="nav-item d-lg-none">
-            <div class="mobile-user-header">
-              <%= icon('user') %><%= user_display_name(current_user) %>
-            </div>
-          </li>
-          <li class="nav-item d-lg-none">
             <%= link_to edit_user_registration_path, class: "nav-link" do %>
               <%= icon('user-edit') %>Profile
             <% end %>
@@ -47,10 +42,10 @@
           </li>
         <% else %>
           <li class="nav-item me-2">
-            <%= link_to "Log in", new_user_session_path, class: "btn btn-outline-light" %>
+            <%= action_button :login, new_user_session_path, "Log in", variant: :light %>
           </li>
           <li class="nav-item">
-            <%= link_to "Sign up", new_user_registration_path, class: "btn btn-warning" %>
+            <%= action_button :signup, new_user_registration_path, "Sign up" %>
           </li>
         <% end %>
       </ul>

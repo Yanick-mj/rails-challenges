@@ -5,15 +5,11 @@
         <!-- Bouton d'action -->
         <div class="d-flex mb-2">
           <div class="back-button">
-            <%= link_to challenges_path, class: "btn btn-outline-secondary" do %>
-              <i class="fas fa-arrow-left me-2"></i>Challenges
-            <% end %>
+            <%= action_button :back, challenges_path, "Challenges" %>
           </div>
           <div class="edit-button flex-grow-1 text-end">
             <% if policy(@challenge).update? %>
-              <%= link_to edit_challenge_path(@challenge), class: "btn btn-outline-secondary" do %>
-                <i class="fas fa-edit me-2"></i>Edit
-              <% end %>
+              <%= action_button :edit, edit_challenge_path(@challenge) %>
             <% end %>
           </div>
         </div>
