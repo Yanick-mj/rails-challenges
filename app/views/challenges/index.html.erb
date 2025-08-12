@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Challenges</h1>
+    <% if user_signed_in? %>
+      <%= link_to "New Challenge", new_challenge_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <% @challenges.each do |challenge| %>
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0"><%= challenge.name %></h5>
+            <div class="participation-counter">
+              <i class="fas fa-users"></i>
+              <span class="badge bg-<%= challenge.full? ? 'danger' : 'primary' %>">
+                <%= challenge.participants.count %>/10
+              </span>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <p class="card-text"><%= truncate(challenge.description, length: 100) %></p>
+            <p class="text-muted">
+              <i class="fas fa-calendar"></i>
+              <%= challenge.start_date.strftime("%d/%m/%Y") %> - 
+              <%= challenge.end_date.strftime("%d/%m/%Y") %>
+            </p>
+            <p class="text-muted">
+              <i class="fas fa-user"></i>
+              Created by <%= challenge.user.full_name %>
+            </p>
+          </div>
+          
+          <div class="card-footer">
+            <%= link_to "View Details", challenge, class: "btn btn-outline-primary btn-sm" %>
+            
+            <% if user_signed_in? %>
+              <% case challenge.participation_status_for(current_user) %>
+              <% when :own_challenge %>
+                <span class="badge bg-info">Your Challenge</span>
+              <% when :full %>
+                <span class="badge bg-danger">Full</span>
+              <% when :already_participating %>
+                <span class="badge bg-success">Participating</span>
+              <% when :can_participate %>
+                <%= link_to "Participate", participate_challenge_path(challenge), 
+                    method: :post, class: "btn btn-success btn-sm" %>
+              <% end %>
+            <% else %>
+              <%= link_to "Login to Participate", new_user_session_path, 
+                  class: "btn btn-outline-secondary btn-sm" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @challenges.empty? %>
+    <div class="text-center py-5">
+      <h3>No challenges yet</h3>
+      <p class="text-muted">Be the first to create a challenge!</p>
+      <% if user_signed_in? %>
+        <%= link_to "Create Challenge", new_challenge_path, class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

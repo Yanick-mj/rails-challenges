@@ -1,0 +1,141 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h1 class="mb-0"><%= @challenge.name %></h1>
+          <div class="participation-counter">
+            <i class="fas fa-users fa-lg"></i>
+            <span class="badge bg-<%= @challenge.full? ? 'danger' : 'primary' %> fs-6">
+              <%= @challenge.participants.count %>/10
+            </span>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <p class="lead"><%= @challenge.description %></p>
+          
+          <div class="row mt-4">
+            <div class="col-sm-6">
+              <p><strong><i class="fas fa-calendar-start"></i> Start Date:</strong> 
+                <%= @challenge.start_date.strftime("%B %d, %Y") %></p>
+            </div>
+            <div class="col-sm-6">
+              <p><strong><i class="fas fa-calendar-end"></i> End Date:</strong> 
+                <%= @challenge.end_date.strftime("%B %d, %Y") %></p>
+            </div>
+          </div>
+          
+          <p><strong><i class="fas fa-user"></i> Created by:</strong> 
+            <%= @challenge.user.full_name %></p>
+          
+          <p><strong><i class="fas fa-map-marker-alt"></i> Available Spots:</strong> 
+            <span class="<%= @challenge.available_spots > 0 ? 'text-success' : 'text-danger' %>">
+              <%= @challenge.available_spots %> remaining
+            </span>
+          </p>
+        </div>
+        
+        <div class="card-footer">
+          <% if user_signed_in? %>
+            <% case @challenge.participation_status_for(current_user) %>
+            <% when :own_challenge %>
+              <div class="d-flex gap-2">
+                <%= link_to "Edit Challenge", edit_challenge_path(@challenge), 
+                    class: "btn btn-primary" %>
+                <%= link_to "Delete Challenge", @challenge, method: :delete, 
+                    data: { confirm: "Are you sure?" }, 
+                    class: "btn btn-danger" %>
+              </div>
+            <% when :full %>
+              <div class="alert alert-warning mb-0">
+                <i class="fas fa-exclamation-triangle"></i>
+                This challenge is full. No more participants can join.
+              </div>
+            <% when :already_participating %>
+              <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-success">You are participating in this challenge</span>
+                <%= link_to "Leave Challenge", leave_challenge_path(@challenge), 
+                    method: :delete, 
+                    data: { confirm: "Are you sure you want to leave this challenge?" },
+                    class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            <% when :can_participate %>
+              <%= link_to "Join Challenge", participate_challenge_path(@challenge), 
+                  method: :post, class: "btn btn-success btn-lg" %>
+            <% end %>
+          <% else %>
+            <div class="alert alert-info mb-0">
+              <i class="fas fa-info-circle"></i>
+              <%= link_to "Login", new_user_session_path, class: "alert-link" %> to participate in this challenge.
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h5><i class="fas fa-users"></i> Participants (<%= @participants.count %>)</h5>
+        </div>
+        <div class="card-body">
+          <% if @participants.any? %>
+            <div class="list-group list-group-flush">
+              <% @participants.each do |participant| %>
+                <div class="list-group-item d-flex align-items-center px-0">
+                  <div class="avatar-circle me-3">
+                    <%= participant.first_name.first.upcase %>
+                  </div>
+                  <div>
+                    <strong><%= participant.full_name %></strong>
+                    <br>
+                    <small class="text-muted">
+                      Joined <%= participant.challenge_participations
+                                            .find_by(challenge: @challenge)
+                                            .created_at.strftime("%m/%d/%Y") %>
+                    </small>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted text-center py-3">
+              <i class="fas fa-user-plus fa-2x d-block mb-2"></i>
+              No participants yet.<br>
+              Be the first to join!
+            </p>
+          <% end %>
+          
+          <% if @challenge.available_spots > 0 %>
+            <div class="mt-3 pt-3 border-top">
+              <p class="text-center text-muted mb-0">
+                <i class="fas fa-hourglass-half"></i>
+                <%= pluralize(@challenge.available_spots, 'spot') %> remaining
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-4">
+    <%= link_to "← Back to Challenges", challenges_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<style>
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+</style>

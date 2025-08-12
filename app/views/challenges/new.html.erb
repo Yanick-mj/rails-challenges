@@ -1,0 +1,90 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h1><i class="fas fa-plus-circle"></i> Create New Challenge</h1>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: @challenge, local: true, html: { class: "needs-validation", novalidate: true }) do |form| %>
+            <% if @challenge.errors.any? %>
+              <div class="alert alert-danger">
+                <h4><%= pluralize(@challenge.errors.count, "error") %> prohibited this challenge from being saved:</h4>
+                <ul class="mb-0">
+                  <% @challenge.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= form.label :name, class: "form-label" %>
+              <%= form.text_field :name, class: "form-control", placeholder: "Enter challenge name", required: true %>
+              <div class="invalid-feedback">
+                Please provide a challenge name.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :description, class: "form-label" %>
+              <%= form.text_area :description, class: "form-control", rows: 4, 
+                  placeholder: "Describe your challenge (5-500 characters)", required: true %>
+              <div class="form-text">
+                <span id="char-count">0</span>/500 characters
+              </div>
+              <div class="invalid-feedback">
+                Please provide a description (5-500 characters).
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6 mb-3">
+                <%= form.label :start_date, class: "form-label" %>
+                <%= form.date_field :start_date, class: "form-control", required: true %>
+                <div class="invalid-feedback">
+                  Please provide a start date.
+                </div>
+              </div>
+
+              <div class="col-sm-6 mb-3">
+                <%= form.label :end_date, class: "form-label" %>
+                <%= form.date_field :end_date, class: "form-control", required: true %>
+                <div class="invalid-feedback">
+                  Please provide an end date.
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i>
+              <strong>Note:</strong> Once created, up to 10 participants can join your challenge. 
+              You cannot participate in your own challenge.
+            </div>
+
+            <div class="d-flex gap-2">
+              <%= form.submit "Create Challenge", class: "btn btn-primary" %>
+              <%= link_to "Cancel", challenges_path, class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const textarea = document.querySelector('#challenge_description');
+  const charCount = document.querySelector('#char-count');
+  
+  if (textarea && charCount) {
+    function updateCharCount() {
+      charCount.textContent = textarea.value.length;
+    }
+    
+    textarea.addEventListener('input', updateCharCount);
+    updateCharCount(); // Initial count
+  }
+});
+</script>
