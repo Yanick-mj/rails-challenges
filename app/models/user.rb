@@ -12,7 +12,7 @@ class User < ApplicationRecord
   validates :last_name, presence: true
 
   def full_name
-    "#{first_name} #{last_name}"
+    "#{first_name} #{last_name}".strip
   end
 
   def can_participate_in?(challenge)
