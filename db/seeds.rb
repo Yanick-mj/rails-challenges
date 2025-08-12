@@ -8,6 +8,8 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+require 'faker'
+
 # Only seed in development or test environment
 return unless Rails.env.development? || Rails.env.test?
 
