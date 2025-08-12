@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Utiliser votre version Ruby locale
-ruby "3.3.5"
+ruby "3.3.9"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.2"
