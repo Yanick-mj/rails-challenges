@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+echo "🧪 Test de l'environnement de staging..."
+
+# Vérifier que le serveur staging est démarré
+if ! curl -s http://localhost:3001/up > /dev/null; then
+  echo "❌ Le serveur staging n'est pas démarré. Lancez 'bin/staging' d'abord."
+  exit 1
+fi
+
+echo "✅ Serveur staging accessible"
+
+# Tests des endpoints critiques
+echo "🔍 Test des endpoints..."
+
+# Test de la route /up
+if curl -f -s http://localhost:3001/up > /dev/null; then
+  echo "✅ Route /up: OK"
+else
+  echo "❌ Route /up: ÉCHEC"
+  exit 1
+fi
+
+# Test de la page d'accueil
+if curl -f -s http://localhost:3001/ > /dev/null; then
+  echo "✅ Page d'accueil: OK"
+else
+  echo "❌ Page d'accueil: ÉCHEC"
+  exit 1
+fi
+
+# Test des helpers (via une page qui les utilise)
+if curl -f -s http://localhost:3001/challenges > /dev/null; then
+  echo "✅ Page challenges: OK"
+else
+  echo "❌ Page challenges: ÉCHEC"
+  exit 1
+fi
+
+echo ""
+echo "🎉 Tous les tests de staging sont passés !"
+echo "✅ Votre application est prête pour le déploiement."

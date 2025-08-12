@@ -1,8 +1,8 @@
 class ChallengesController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :set_challenge, only: [ :show, :update, :edit ]
+  before_action :set_challenge, only: [ :show, :update, :edit, :participate, :leave ]
 
-    def index
+  def index
     sort_direction = params[:sort] == "desc" ? :desc : :asc
     @challenges = policy_scope(Challenge).order(start_date: sort_direction)
 
@@ -45,6 +45,30 @@ class ChallengesController < ApplicationController
       redirect_to @challenge, notice: "Updated !"
     else
       render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def participate
+    authorize @challenge, :show?
+
+    participation = @challenge.challenge_participations.build(user: current_user)
+
+    if participation.save
+      redirect_back(fallback_location: @challenge, notice: "🎉 Vous participez maintenant à '#{@challenge.name}' (#{@challenge.participants.count}/10 participants)")
+    else
+      redirect_back(fallback_location: @challenge, alert: "❌ #{participation.errors.full_messages.join(", ")}")
+    end
+  end
+
+  def leave
+    authorize @challenge, :show?
+
+    participation = @challenge.challenge_participations.find_by(user: current_user)
+
+    if participation&.destroy
+      redirect_back(fallback_location: @challenge, notice: "👋 Vous avez quitté '#{@challenge.name}' (#{@challenge.participants.count}/10 participants)")
+    else
+      redirect_back(fallback_location: @challenge, alert: "❌ Impossible de quitter ce challenge.")
     end
   end
 

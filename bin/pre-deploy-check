@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+echo "🚀 Vérification pré-déploiement..."
+echo ""
+
+# 1. Vérifier l'environnement staging
+echo "🔍 Test de l'environnement staging..."
+if bin/test-staging; then
+  echo "✅ Staging: OK"
+else
+  echo "❌ Staging: ÉCHEC"
+  exit 1
+fi
+
+echo ""
+
+# 2. Vérifier les routes
+echo "🛣️  Vérification des routes..."
+if rails routes | grep -q "rails_health_check"; then
+  echo "✅ Route /up: OK"
+else
+  echo "❌ Route /up: MANQUANTE"
+  exit 1
+fi
+
+echo ""
+
+# 3. Vérifier les helpers critiques
+echo "🔧 Vérification des helpers..."
+if rails runner "puts ApplicationHelper.instance_methods.grep(/flash_class/).any?" | grep -q "true"; then
+  echo "✅ Helper flash_class: OK"
+else
+  echo "❌ Helper flash_class: MANQUANT"
+  exit 1
+fi
+
+echo ""
+
+# 4. Vérifier la configuration de la base de données
+echo "🗄️  Vérification de la configuration DB..."
+if rails db:migrate:status > /dev/null 2>&1; then
+  echo "✅ Configuration DB: OK"
+else
+  echo "❌ Configuration DB: ÉCHEC"
+  exit 1
+fi
+
+echo ""
+
+# 5. Vérifier la syntaxe des fichiers
+echo "📝 Vérification de la syntaxe..."
+if rails runner "puts 'Syntax OK'" > /dev/null 2>&1; then
+  echo "✅ Syntaxe: OK"
+else
+  echo "❌ Syntaxe: ERREUR"
+  exit 1
+fi
+
+echo ""
+echo "🎉 Toutes les vérifications sont passées !"
+echo "✅ Votre application est prête pour le déploiement sur Heroku."
+echo ""
+echo "📋 Prochaines étapes:"
+echo "   1. git add ."
+echo "   2. git commit -m 'votre message'"
+echo "   3. git push heroku main"

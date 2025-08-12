@@ -19,24 +19,6 @@
   <% if @challenges.empty? %>
     <p>No challenges available at the moment.</p>
   <% else %>
-    <% @challenges.each do |challenge| %>
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title"><%= challenge.name %></h5>
-          <p class="card-text"><%= truncate(challenge.description, length: 100) %></p>
-          <p class="card-text">
-            <span class="me-4">
-              <i class="fas fa-calendar-plus text-success me-1"></i>
-              Start Date: <%= challenge.start_date&.strftime("%d/%m/%Y") %>
-            </span>
-            <span>
-              <i class="fas fa-calendar-check text-danger me-1"></i>
-              End Date: <%= challenge.end_date&.strftime("%d/%m/%Y") %>
-            </span>
-          </p>
-          <%= action_button :view, challenge, "Read more" %>
-        </div>
-      </div>
-    <% end %>
+    <%= render partial: 'challenges_list', locals: { challenges: @challenges } %>
   <% end %>
 </div>

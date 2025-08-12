@@ -11,15 +11,10 @@
       <%= form_for(resource, as: resource_name, url: form_url, html: { class: "auth-form" }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource if show_errors %>
 
-        <div class="form-group mb-3 ">
-          <div class="input-group">
-            <span class="input-group-text">
-              <%= icon('envelope') %>
-            </span>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email",
-                class: "form-control", placeholder: "Votre email" %>
-          </div>
-        </div>
+        <%= user_form_fields(f,
+          show_name_fields: form_url == registration_path(resource_name),
+          autofocus_email: form_url != registration_path(resource_name)
+        ) %>
 
         <div class="form-group mb-3 ">
           <div class="input-group">

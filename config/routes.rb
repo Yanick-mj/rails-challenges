@@ -3,7 +3,12 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   devise_for :users
 
-  resources :challenges
+  resources :challenges do
+    member do
+      post :participate
+      delete :leave
+    end
+  end
 
   root "challenges#index"
 end

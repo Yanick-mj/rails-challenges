@@ -96,3 +96,22 @@ production:
     <<: *default
     url: <%= ENV['DATABASE_URL'] %>
     migrations_paths: db/cable_migrate
+
+staging:
+  # Environnement de staging local - simule la production
+  primary:
+    <<: *default
+    database: rails_challenge_staging
+    url: <%= ENV['DATABASE_URL'] || "postgresql://localhost/rails_challenge_staging" %>
+  cache:
+    <<: *default
+    database: rails_challenge_staging
+    url: <%= ENV['DATABASE_URL'] || "postgresql://localhost/rails_challenge_staging" %>
+  queue:
+    <<: *default
+    database: rails_challenge_staging
+    url: <%= ENV['DATABASE_URL'] || "postgresql://localhost/rails_challenge_staging" %>
+  cable:
+    <<: *default
+    database: rails_challenge_staging
+    url: <%= ENV['DATABASE_URL'] || "postgresql://localhost/rails_challenge_staging" %>

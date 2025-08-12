@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+echo "🚀 Démarrage de l'environnement de staging..."
+
+# Vérifier que PostgreSQL est démarré
+if ! pg_isready -q; then
+  echo "❌ PostgreSQL n'est pas démarré. Démarrez-le d'abord."
+  exit 1
+fi
+
+# Créer la base de données staging si elle n'existe pas
+echo "📊 Configuration de la base de données staging..."
+RAILS_ENV=staging rails db:create 2>/dev/null || true
+RAILS_ENV=staging rails db:migrate
+RAILS_ENV=staging rails db:seed
+
+# Précompiler les assets
+echo "🎨 Précompilation des assets..."
+RAILS_ENV=staging rails assets:precompile
+
+# Démarrer le serveur
+echo "🌐 Démarrage du serveur staging sur http://localhost:3001"
+echo "📝 Logs disponibles dans log/staging.log"
+echo "🛑 Pour arrêter: Ctrl+C"
+echo ""
+
+RAILS_ENV=staging rails server -p 3001

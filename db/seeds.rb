@@ -1,23 +1,88 @@
-# Charger Faker uniquement en développement ou test
-if Rails.env.development? || Rails.env.test?
-  require "faker"
-end
+# Seeds simples pour tester US Participation
+# À exécuter APRÈS les migrations
 
-Challenge.destroy_all
+puts "🌱 Creating test data for US Participation..."
 
-if Rails.env.development? || Rails.env.test?
-  15.times do |i|
-    start_date = Faker::Date.forward(days: rand(0..30))
-    end_date = start_date + rand(1..10).days
+# Clean existing data
+ChallengeParticipation.delete_all if defined?(ChallengeParticipation)
+Challenge.delete_all
+User.delete_all
 
-    Challenge.create!(
-      name: "Challenge #{i + 1}",
-      description: "This is the description for challenge #{i + 1}",
-      start_date: start_date,
-      end_date: end_date
-    )
-  end
-  puts "Created #{Challenge.count} challenges."
-else
-  puts "Skipping seed data generation in #{Rails.env} environment."
-end
+# Create test users
+admin = User.create!(
+  email: "admin@example.com",
+  password: "password",
+  first_name: "Admin",
+  last_name: "User"
+)
+
+creator = User.create!(
+  email: "creator@example.com",
+  password: "password",
+  first_name: "Challenge",
+  last_name: "Creator"
+)
+
+user1 = User.create!(
+  email: "user1@example.com",
+  password: "password",
+  first_name: "John",
+  last_name: "Doe"
+)
+
+user2 = User.create!(
+  email: "user2@example.com",
+  password: "password",
+  first_name: "Jane",
+  last_name: "Smith"
+)
+
+puts "✅ Created #{User.count} users"
+
+# Create test challenges
+challenge1 = Challenge.create!(
+  name: "30-Day Fitness Challenge",
+  description: "Complete a 30-minute workout every day for 30 days.",
+  start_date: Date.current,
+  end_date: Date.current + 30.days,
+  user: creator
+)
+
+challenge2 = Challenge.create!(
+  name: "Daily Reading",
+  description: "Read for at least 20 minutes every day.",
+  start_date: Date.current + 1.week,
+  end_date: Date.current + 60.days,
+  user: admin
+)
+
+challenge3 = Challenge.create!(
+  name: "Learn Spanish",
+  description: "Practice Spanish for 15 minutes daily.",
+  start_date: Date.current + 3.days,
+  end_date: Date.current + 90.days,
+  user: user1
+)
+
+puts "✅ Created #{Challenge.count} challenges"
+
+# Create some participations to test
+ChallengeParticipation.create!(challenge: challenge1, user: user1)
+ChallengeParticipation.create!(challenge: challenge1, user: user2)
+ChallengeParticipation.create!(challenge: challenge2, user: user1)
+
+puts "✅ Created #{ChallengeParticipation.count} participations"
+
+puts "\n🎉 Test data ready!"
+puts "📝 Test accounts:"
+puts "   - admin@example.com / password"
+puts "   - creator@example.com / password"
+puts "   - user1@example.com / password"
+puts "   - user2@example.com / password"
+
+puts "\n🎯 Test scenarios:"
+puts "   - Challenge 1: #{challenge1.participants.count}/10 participants"
+puts "   - Challenge 2: #{challenge2.participants.count}/10 participants"
+puts "   - Challenge 3: #{challenge3.participants.count}/10 participants (empty)"
+
+puts "\n🚀 Ready to test! Run: rails server"

@@ -1,68 +1,118 @@
 <div class="container-md py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
-      <div class="card shadow-sm p-3 mb-5 rounded">
-        <!-- Bouton d'action -->
-        <div class="d-flex mb-2">
-          <div class="back-button">
-            <%= action_button :back, challenges_path, "Challenges" %>
-          </div>
-          <div class="edit-button flex-grow-1 text-end">
-            <% if policy(@challenge).update? %>
-              <%= action_button :edit, edit_challenge_path(@challenge) %>
-            <% end %>
-          </div>
-        </div>
+      <div class="card  mb-4 shadow-sm border-1">
+        <!-- Header avec actions -->
+        <div class="card-header bg-gradient-primary py-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center">
+              <%= link_to challenges_path, class: "btn btn-outline-dark btn-sm me-3" do %>
+                <i class="fas fa-arrow-left me-1"></i> Retour
+              <% end %>
+            </div>
+            <div class="d-flex align-items-center justify-content-center flex-grow-1">
+              <h1 class="card-title mb-0 h3 text-center">
+                <i class="fas fa-trophy me-2 text-primary"></i>
+                <%= @challenge.name %>
+              </h1>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <!-- Badge de statut dynamique -->
+              <% if @challenge.full? %>
+                <span class="badge bg-danger fs-6 px-3 py-2">
+                  <i class="fas fa-lock me-1"></i>Challenge Complet
+                </span>
+              <% elsif @challenge.user == current_user %>
+                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                  <i class="fas fa-crown me-1"></i>
+                </span>
+              <% else %>
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                  <i class="fas fa-users me-1"></i><%= @challenge.participants.count %>/10
+                </span>
+              <% end %>
 
-        <!-- Header de la carte -->
-        <div class="card-header bg-primary text-white py-4">
-          <div class="d-flex justify-content-between align-items-center">
-            <h1 class="card-title mb-0 h2">
-              <i class="fas fa-trophy me-3"></i>
-              <%= @challenge.name %>
-            </h1>
-            <div class="badge bg-light text-primary fs-6 px-3 py-2">
-              <i class="fas fa-info-circle me-1"></i>Status
+              <% if policy(@challenge).update? %>
+                <%= link_to edit_challenge_path(@challenge), class: "btn btn-outline-dark btn-sm" do %>
+                  <i class="fas fa-edit me-1"></i> Modifier
+                <% end %>
+              <% end %>
             </div>
           </div>
         </div>
 
         <!-- Corps de la carte -->
-        <div class="card-body p-5">
+        <div class="card-body p-4">
           <!-- Description -->
           <div class="mb-4">
-            <h5 class="text-muted mb-3">
-              <i class="fas fa-info-circle me-2"></i>
+            <h5 class="text-dark mb-3 fw-bold">
+              <i class="fas fa-info-circle me-2 text-primary"></i>
               Description
             </h5>
-            <p class="card-text fs-5 lh-base text-dark">
-              <%= @challenge.description %>
-            </p>
+            <div class="bg-light p-3 rounded">
+              <p class="card-text mb-0 lh-base">
+                <%= @challenge.description %>
+              </p>
+            </div>
           </div>
 
-          <!-- Dates -->
-          <div class="row g-4">
-            <div class="col-md-6">
-              <div class="d-flex align-items-center p-3 bg-light rounded">
-                <div class="me-3">
-                  <i class="fas fa-calendar-plus text-success fs-4"></i>
-                </div>
-                <div>
-                  <small class="text-muted d-block">Date de début</small>
-                  <strong class="fs-6"><%= @challenge.start_date.strftime("%d/%m/%Y") %></strong>
-                </div>
+          <!-- Informations clés -->
+          <div class="mb-4">
+            <h5 class="text-dark mb-3 fw-bold">
+              <i class="fas fa-calendar-alt me-2 text-primary"></i>
+              Informations clés
+            </h5>
+            <%= challenge_dates_display(@challenge, format: :detailed) %>
+          </div>
+
+          <!-- Section participation -->
+
+
+          <!-- Liste des participants -->
+          <div class="mb-4">
+            <h5 class="text-dark mb-3 fw-bold">
+              <i class="fas fa-users me-2 text-primary"></i>
+              Participants (<%= @challenge.participants.count %>/10)
+            </h5>
+
+            <% if @challenge.participants.any? %>
+              <div class="row g-3">
+                <% @challenge.participants.each_with_index do |participant, index| %>
+                  <div class="col-md-6 col-lg-4">
+                    <div class="d-flex align-items-center p-3 <%= participant == current_user ? 'bg-success-dark text-white' : 'bg-light' %> rounded shadow-sm">
+                      <div class="me-3">
+                        <% if participant == current_user %>
+                          <i class="fas fa-user-check fs-4"></i>
+                        <% else %>
+                          <i class="fas fa-user-circle text-primary fs-4"></i>
+                        <% end %>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="<%= participant == current_user ? 'text-black' : 'text-black' %> fw-medium">
+                          <%= user_display_name(participant) %>
+                        </div>
+                        <small class="<%= participant == current_user ? 'text-black-50' : 'text-dark' %>">
+                          Participant #<%= index + 1 %>
+                        </small>
+                        <% if participant == current_user %>
+                          <span class="badge bg-white text-success-dark ms-2">Vous</span>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="d-flex align-items-center p-3 bg-light rounded">
-                <div class="me-3">
-                  <i class="fas fa-calendar-check text-danger fs-4"></i>
-                </div>
-                <div>
-                  <small class="text-muted d-block">Date de fin</small>
-                  <strong class="fs-6"><%= @challenge.end_date.strftime("%d/%m/%Y") %></strong>
-                </div>
+            <% else %>
+              <div class="text-center py-4 bg-light rounded">
+                <i class="fas fa-users text-dark fs-1 mb-3"></i>
+                <p class="text-dark mb-0">Aucun participant pour le moment</p>
+                <small class="text-dark">Soyez le premier à rejoindre ce challenge !</small>
               </div>
+            <% end %>
+          </div>
+          <div class="mb-4"> <!--# bouton participation -->
+            <div class="text-center">
+              <%= participation_button(@challenge) %>
             </div>
           </div>
         </div>
