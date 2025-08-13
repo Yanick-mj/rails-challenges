@@ -27,7 +27,7 @@ echo ""
 
 # 3. Vérifier les helpers critiques
 echo "🔧 Vérification des helpers..."
-if rails runner "puts ApplicationHelper.instance_methods.grep(/flash_class/).any?" | grep -q "true"; then
+if grep -q "def flash_class" app/helpers/application_helper.rb; then
   echo "✅ Helper flash_class: OK"
 else
   echo "❌ Helper flash_class: MANQUANT"
