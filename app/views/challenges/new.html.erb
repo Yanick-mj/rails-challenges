@@ -1,7 +1,21 @@
+<%# ======================================== %>
+<%# PAGE DE CRÉATION D'UN NOUVEAU CHALLENGE %>
+<%# ======================================== %>
+<%# Cette page permet de créer un nouveau challenge %>
+<%# Elle utilise le formulaire partiel _form.html.erb %>
+
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
+
+      <%# ======================================== %>
+      <%# CARTE PRINCIPALE DE CRÉATION %>
+      <%# ======================================== %>
       <div class="card shadow-sm border-0">
+
+        <%# ======================================== %>
+        <%# EN-TÊTE DE LA CARTE - TITRE DE CRÉATION %>
+        <%# ======================================== %>
         <div class="card-header bg-primary text-white py-3">
           <h2 class="mb-0">
             <i class="fas fa-plus me-2"></i>
@@ -9,10 +23,18 @@
           </h2>
         </div>
 
+        <%# ======================================== %>
+        <%# CORPS DE LA CARTE - FORMULAIRE DE CRÉATION %>
+        <%# ======================================== %>
         <div class="card-body p-4">
+          <%# Rendu du formulaire partiel pour créer un nouveau challenge %>
           <%= render 'form' %>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<%# ======================================== %>
+<%# FIN DE LA PAGE DE CRÉATION %>
+<%# ======================================== %>

@@ -1,24 +1,51 @@
+<%# ======================================== %>
+<%# PARTIAL LISTE DES CHALLENGES %>
+<%# ======================================== %>
+<%# Ce partial affiche une liste de challenges sous forme de cartes %>
+<%# Il est utilisé dans la page d'index et peut être réutilisé ailleurs %>
+
+<%# Boucle sur chaque challenge de la liste %>
 <% challenges.each do |challenge| %>
+
+  <%# ======================================== %>
+  <%# CARTE INDIVIDUELLE DU CHALLENGE %>
+  <%# ======================================== %>
   <div class="card mb-4 challenge-item">
-    <!-- Header de la card avec badge de statut -->
+
+    <%# ======================================== %>
+    <%# EN-TÊTE DE LA CARTE - TITRE ET BADGES %>
+    <%# ======================================== %>
     <div class="card-header bg-transparent border-0 pb-0">
       <div class="d-flex justify-content-between align-items-start">
+
+        <%# Titre du challenge avec icône trophée %>
         <h5 class="card-title mb-0 text-dark fw-bold">
           <i class="fas fa-trophy me-2 text-primary"></i>
           <%= challenge.name %>
         </h5>
+
+        <%# Zone des badges de statut et participation %>
         <div class="d-flex align-items-center gap-2">
-          <!-- Badge de participation personnalisé -->
+
+          <%# ======================================== %>
+          <%# BADGE DE PARTICIPATION PERSONNALISÉ %>
+          <%# ======================================== %>
+          <%# Couleur verte si l'utilisateur participe, bleue sinon %>
           <span class="badge <%= challenge.participants.include?(current_user) ? 'bg-success' : 'bg-primary' %> rounded-pill">
             <i class="fas fa-users me-1"></i>
             <%= participants_counter(challenge) %>
           </span>
-          <!-- Indicateur de statut -->
+
+          <%# ======================================== %>
+          <%# INDICATEURS DE STATUT SPÉCIAUX %>
+          <%# ======================================== %>
           <% if challenge.full? %>
+            <%# Challenge complet (10/10 participants) %>
             <span class="badge bg-danger rounded-pill">
               <i class="fas fa-lock me-1"></i>Complet
             </span>
           <% elsif challenge.user == current_user %>
+            <%# L'utilisateur connecté est le créateur %>
             <span class="badge bg-warning text-dark rounded-pill">
               <i class="fas fa-crown me-1"></i>
             </span>
@@ -27,23 +54,38 @@
       </div>
     </div>
 
+    <%# ======================================== %>
+    <%# CORPS DE LA CARTE - CONTENU DU CHALLENGE %>
+    <%# ======================================== %>
     <div class="card-body pt-3">
-      <!-- Description avec limite de caractères -->
+
+      <%# ======================================== %>
+      <%# DESCRIPTION TRONQUÉE %>
+      <%# ======================================== %>
+      <%# Affichage de la description limitée à 120 caractères %>
       <p class="card-text text-muted mb-3">
         <%= truncate(challenge.description, length: 120, separator: ' ') %>
       </p>
 
-      <!-- Dates avec design amélioré -->
+      <%# ======================================== %>
+      <%# DATES DU CHALLENGE %>
+      <%# ======================================== %>
+      <%# Utilise le helper challenge_dates_display en format compact %>
       <div class="mb-3">
         <%= challenge_dates_display(challenge, format: :compact) %>
       </div>
 
-      <!-- Actions avec design unifié -->
+      <%# ======================================== %>
+      <%# ZONE D'ACTIONS - BOUTONS ET LIENS %>
+      <%# ======================================== %>
       <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+
+        <%# Bouton "Détails" - Lien vers la page show %>
         <%= link_to challenge, class: "btn btn-outline-primary btn-sm" do %>
           <i class="fas fa-eye me-1"></i> Détails
         <% end %>
 
+        <%# Zone des boutons de participation (Rejoindre/Quitter) %>
         <div class="d-flex gap-2">
           <%= participation_button_compact(challenge) %>
         </div>
@@ -51,3 +93,7 @@
     </div>
   </div>
 <% end %>
+
+<%# ======================================== %>
+<%# FIN DU PARTIAL LISTE DES CHALLENGES %>
+<%# ======================================== %>

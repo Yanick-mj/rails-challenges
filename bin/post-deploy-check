@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+echo "🔍 Vérification post-déploiement..."
+echo ""
+
+# 1. Vérifier que l'application répond
+echo "🌐 Test de l'application..."
+if curl -s https://rails-challenge-88c078717b10.herokuapp.com/up | grep -q "green"; then
+  echo "✅ Application accessible"
+else
+  echo "❌ Application inaccessible"
+  exit 1
+fi
+
+echo ""
+
+# 2. Vérifier les migrations
+echo "🗄️  Vérification des migrations..."
+if heroku run rails db:migrate:status | grep -q "up"; then
+  echo "✅ Migrations à jour"
+else
+  echo "⚠️  Migrations en attente"
+  echo "Exécution des migrations..."
+  heroku run rails db:migrate
+fi
+
+echo ""
+
+# 3. Vérifier les données de test
+echo "🌱 Vérification des données..."
+if heroku run rails runner "puts Challenge.count" | grep -q "[0-9]"; then
+  echo "✅ Données présentes"
+else
+  echo "⚠️  Aucune donnée trouvée"
+  echo "Exécution des seeds..."
+  heroku run rails db:seed
+fi
+
+echo ""
+
+# 4. Test de la page d'accueil
+echo "🏠 Test de la page d'accueil..."
+if curl -s https://rails-challenge-88c078717b10.herokuapp.com/ | grep -q "challenge"; then
+  echo "✅ Page d'accueil fonctionnelle"
+else
+  echo "❌ Erreur sur la page d'accueil"
+  exit 1
+fi
+
+echo ""
+echo "🎉 Vérification post-déploiement terminée !"
+echo "✅ L'application est opérationnelle."

@@ -1,7 +1,21 @@
+<%# ======================================== %>
+<%# PAGE D'ÉDITION D'UN CHALLENGE %>
+<%# ======================================== %>
+<%# Cette page permet de modifier un challenge existant %>
+<%# Elle utilise le formulaire partiel _form.html.erb %>
+
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
+
+      <%# ======================================== %>
+      <%# CARTE PRINCIPALE D'ÉDITION %>
+      <%# ======================================== %>
       <div class="card shadow-sm border-0">
+
+        <%# ======================================== %>
+        <%# EN-TÊTE DE LA CARTE - TITRE D'ÉDITION %>
+        <%# ======================================== %>
         <div class="card-header bg-warning text-dark py-3">
           <h2 class="mb-0">
             <i class="fas fa-edit me-2"></i>
@@ -9,10 +23,18 @@
           </h2>
         </div>
 
+        <%# ======================================== %>
+        <%# CORPS DE LA CARTE - FORMULAIRE D'ÉDITION %>
+        <%# ======================================== %>
         <div class="card-body p-4">
+          <%# Rendu du formulaire partiel avec les données du challenge %>
           <%= render 'form' %>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<%# ======================================== %>
+<%# FIN DE LA PAGE D'ÉDITION %>
+<%# ======================================== %>

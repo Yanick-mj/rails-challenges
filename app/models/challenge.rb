@@ -26,7 +26,6 @@ class Challenge < ApplicationRecord
 
   def can_participate?(user)
     return false unless user
-    return false if user == self.user
     return false if full?
     return false if participants.include?(user)
     true

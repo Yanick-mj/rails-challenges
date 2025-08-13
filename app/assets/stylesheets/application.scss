@@ -646,3 +646,33 @@
     }
   }
 }
+
+// Styles pour les avatars
+.avatar-preview {
+  img {
+    border: 2px solid #dee2e6;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: #0d6efd;
+    }
+  }
+}
+
+.current-avatar {
+  img {
+    border: 2px solid #28a745;
+  }
+}
+
+// Animation pour le changement d'avatar
+.avatar-transition {
+  transition: all 0.3s ease;
+}
+
+// Styles pour les avatars dans les listes
+.user-avatar {
+  &.border {
+    border-width: 2px !important;
+  }
+}

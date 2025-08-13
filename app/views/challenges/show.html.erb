@@ -1,37 +1,62 @@
+<%# ======================================== %>
+<%# PAGE DE DÉTAIL D'UN CHALLENGE %>
+<%# ======================================== %>
+<%# Cette page affiche les détails complets d'un challenge %>
+<%# avec sa description, ses dates, et la liste des participants %>
+
 <div class="container-md py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
-      <div class="card  mb-4 shadow-sm border-1">
-        <!-- Header avec actions -->
+      <%# ======================================== %>
+      <%# CARTE PRINCIPALE DU CHALLENGE %>
+      <%# ======================================== %>
+      <div class="card mb-4 shadow-sm border-1">
+
+        <%# ======================================== %>
+        <%# EN-TÊTE AVEC TITRE ET ACTIONS %>
+        <%# ======================================== %>
         <div class="card-header bg-gradient-primary py-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <%# Bouton de retour vers la liste des challenges %>
             <div class="d-flex align-items-center">
               <%= link_to challenges_path, class: "btn btn-outline-dark btn-sm me-3" do %>
                 <i class="fas fa-arrow-left me-1"></i> Retour
               <% end %>
             </div>
+
+            <%# Titre du challenge avec icône trophée %>
             <div class="d-flex align-items-center justify-content-center flex-grow-1">
               <h1 class="card-title mb-0 h3 text-center">
                 <i class="fas fa-trophy me-2 text-primary"></i>
                 <%= @challenge.name %>
               </h1>
             </div>
+
+            <%# Zone des badges de statut et boutons d'action %>
             <div class="d-flex align-items-center gap-2">
-              <!-- Badge de statut dynamique -->
+
+              <%# ======================================== %>
+              <%# BADGES DE STATUT DYNAMIQUES %>
+              <%# ======================================== %>
               <% if @challenge.full? %>
+                <%# Challenge complet (10/10 participants) %>
                 <span class="badge bg-danger fs-6 px-3 py-2">
                   <i class="fas fa-lock me-1"></i>Challenge Complet
                 </span>
               <% elsif @challenge.user == current_user %>
+                <%# L'utilisateur connecté est le créateur du challenge %>
                 <span class="badge bg-warning text-dark fs-6 px-3 py-2">
                   <i class="fas fa-crown me-1"></i>
                 </span>
               <% else %>
+                <%# Affichage du nombre de participants %>
                 <span class="badge bg-primary fs-6 px-3 py-2">
                   <i class="fas fa-users me-1"></i><%= @challenge.participants.count %>/10
                 </span>
               <% end %>
 
+              <%# Bouton de modification (visible uniquement au créateur) %>
               <% if policy(@challenge).update? %>
                 <%= link_to edit_challenge_path(@challenge), class: "btn btn-outline-dark btn-sm" do %>
                   <i class="fas fa-edit me-1"></i> Modifier
@@ -41,9 +66,14 @@
           </div>
         </div>
 
-        <!-- Corps de la carte -->
+        <%# ======================================== %>
+        <%# CORPS DE LA CARTE - CONTENU PRINCIPAL %>
+        <%# ======================================== %>
         <div class="card-body p-4">
-          <!-- Description -->
+
+          <%# ======================================== %>
+          <%# SECTION DESCRIPTION DU CHALLENGE %>
+          <%# ======================================== %>
           <div class="mb-4">
             <h5 class="text-dark mb-3 fw-bold">
               <i class="fas fa-info-circle me-2 text-primary"></i>
@@ -56,53 +86,83 @@
             </div>
           </div>
 
-          <!-- Informations clés -->
+          <%# ======================================== %>
+          <%# SECTION INFORMATIONS CLÉS (DATES) %>
+          <%# ======================================== %>
           <div class="mb-4">
             <h5 class="text-dark mb-3 fw-bold">
               <i class="fas fa-calendar-alt me-2 text-primary"></i>
               Informations clés
             </h5>
+            <%# Utilise le helper challenge_dates_display pour afficher les dates %>
             <%= challenge_dates_display(@challenge, format: :detailed) %>
           </div>
 
-          <!-- Section participation -->
-
-
-          <!-- Liste des participants -->
+          <%# ======================================== %>
+          <%# SECTION LISTE DES PARTICIPANTS %>
+          <%# ======================================== %>
           <div class="mb-4">
             <h5 class="text-dark mb-3 fw-bold">
               <i class="fas fa-users me-2 text-primary"></i>
               Participants (<%= @challenge.participants.count %>/10)
             </h5>
 
+            <%# ======================================== %>
+            <%# AFFICHAGE DES PARTICIPANTS %>
+            <%# ======================================== %>
             <% if @challenge.participants.any? %>
+              <%# Grille responsive pour afficher les participants %>
               <div class="row g-3">
+                <%# Boucle sur chaque participant avec son index %>
                 <% @challenge.participants.each_with_index do |participant, index| %>
                   <div class="col-md-6 col-lg-4">
-                    <div class="d-flex align-items-center p-3 <%= participant == current_user ? 'bg-success-dark text-white' : 'bg-light' %> rounded shadow-sm">
-                      <div class="me-3">
+                    <%# Carte individuelle du participant %>
+                    <div class="d-flex align-items-center p-3 <%= participant == current_user ? 'bg-success text-white' : 'bg-white border' %> rounded shadow-sm">
+
+                      <%# ======================================== %>
+                      <%# AVATAR DU PARTICIPANT %>
+                      <%# ======================================== %>
+                      <div class="me-3 position-relative">
+                        <%# Affichage de l'avatar avec le helper participant_avatar %>
+                        <%= participant_avatar(participant, {
+                          class: participant == current_user ? 'border border-white shadow' : 'shadow',
+                          title: "Avatar de #{user_display_name(participant)}"
+                        }, size: 48) %>
+
+                        <%# Badge de vérification pour l'utilisateur connecté %>
                         <% if participant == current_user %>
-                          <i class="fas fa-user-check fs-4"></i>
-                        <% else %>
-                          <i class="fas fa-user-circle text-primary fs-4"></i>
+                          <div class="position-absolute top-0 start-100 translate-middle">
+                            <span class="badge bg-success rounded-pill">
+                              <i class="fas fa-user-check"></i>
+                            </span>
+                          </div>
                         <% end %>
                       </div>
+
+                      <%# ======================================== %>
+                      <%# INFORMATIONS DU PARTICIPANT %>
+                      <%# ======================================== %>
                       <div class="flex-grow-1">
-                        <div class="<%= participant == current_user ? 'text-black' : 'text-black' %> fw-medium">
+                        <%# Nom du participant %>
+                        <div class="<%= participant == current_user ? 'text-white' : 'text-dark' %> fw-bold fs-6">
                           <%= user_display_name(participant) %>
                         </div>
-                        <small class="<%= participant == current_user ? 'text-black-50' : 'text-dark' %>">
+
+                        <%# Numéro du participant %>
+                        <small class="<%= participant == current_user ? 'text-white-75' : 'text-muted' %>">
                           Participant #<%= index + 1 %>
                         </small>
-                        <% if participant == current_user %>
-                          <span class="badge bg-white text-success-dark ms-2">Vous</span>
-                        <% end %>
+
+                        
                       </div>
                     </div>
                   </div>
                 <% end %>
               </div>
             <% else %>
+              <%# ======================================== %>
+              <%# ÉTAT VIDE - AUCUN PARTICIPANT %>
+              <%# ======================================== %>
               <div class="text-center py-4 bg-light rounded">
                 <i class="fas fa-users text-dark fs-1 mb-3"></i>
                 <p class="text-dark mb-0">Aucun participant pour le moment</p>
@@ -110,8 +170,14 @@
               </div>
             <% end %>
           </div>
-          <div class="mb-4"> <!--# bouton participation -->
+
+          <%# ======================================== %>
+          <%# SECTION BOUTON DE PARTICIPATION %>
+          <%# ======================================== %>
+          <div class="mb-4">
             <div class="text-center">
+              <%# Utilise le helper participation_button pour afficher le bouton approprié %>
+              <%# (Rejoindre/Quitter selon l'état de participation de l'utilisateur) %>
               <%= participation_button(@challenge) %>
             </div>
           </div>
@@ -120,3 +186,7 @@
     </div>
   </div>
 </div>
+
+<%# ======================================== %>
+<%# FIN DE LA PAGE DE DÉTAIL DU CHALLENGE %>
+<%# ======================================== %>

@@ -1,51 +1,49 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
-    <%= link_to root_path, class: "navbar-brand" do %>
-      <%= icon('trophy', 'me-2') %>Rails Challenge
-    <% end %>
+    <%= link_to "Rails", root_path, class: "navbar-brand fw-bold" %>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
-          <!-- Desktop: Dropdown -->
-          <li class="nav-item dropdown d-none d-lg-block">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              <%= icon('user') %><%= user_display_name(current_user) %>
+          <li class="nav-item">
+            <%= link_to "Mes Challenges", challenges_path(owner: "me"), class: "nav-link" %>
+          </li>
+        <% end %>
+      </ul>
+
+      <ul class="navbar-nav">
+        <% if user_signed_in? %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              <%= user_avatar(current_user, {}, size: 32) %>
+              <span class="ms-2"><%= user_display_name(current_user) %></span>
             </a>
-            <ul class="dropdown-menu">
-              <li><%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %></li>
-              <li><%= link_to "Mes Challenges", challenges_path(owner: "me"), class: "dropdown-item" %></li>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
+                  <i class="fas fa-user-edit me-2"></i>Modifier le profil
+                <% end %>
+              </li>
               <li><hr class="dropdown-divider"></li>
-              <li><%= button_to "Log out", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
+              <li>
+                <%= button_to destroy_user_session_path,
+                    method: :delete,
+                    class: "dropdown-item text-danger border-0 bg-transparent w-100 text-start" do %>
+                  <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                <% end %>
+              </li>
             </ul>
           </li>
-
-          <!-- Mobile: Options dans le menu hamburger -->
-          <li class="nav-item d-lg-none">
-            <%= link_to edit_user_registration_path, class: "nav-link" do %>
-              <%= icon('user-edit') %>Profile
-            <% end %>
-          </li>
-          <li class="nav-item d-lg-none">
-            <%= link_to challenges_path(owner: "me"), class: "nav-link" do %>
-              <%= icon('list') %>Mes Challenges
-            <% end %>
-          </li>
-          <li class="nav-item d-lg-none">
-            <%= button_to destroy_user_session_path, method: :delete, class: "nav-link mobile-logout-btn" do %>
-              <%= icon('sign-out-alt') %>Log out
-            <% end %>
-          </li>
         <% else %>
-          <li class="nav-item me-2">
-            <%= action_button :login, new_user_session_path, "Log in", variant: :light %>
+          <li class="nav-item">
+            <%= link_to "Connexion", new_user_session_path, class: "nav-link" %>
           </li>
           <li class="nav-item">
-            <%= action_button :signup, new_user_registration_path, "Sign up" %>
+            <%= link_to "Inscription", new_user_registration_path, class: "nav-link" %>
           </li>
         <% end %>
       </ul>

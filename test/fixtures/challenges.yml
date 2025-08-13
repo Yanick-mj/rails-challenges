@@ -1,13 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  description: MyString
+  name: Test Challenge
+  description: A test challenge for testing
   start_date: 2025-08-07
-  end_date: 2025-08-07
+  end_date: 2025-09-07
+  user: one
 
 two:
-  name: MyString
-  description: MyString
+  name: Another Test Challenge
+  description: Another test challenge for testing
   start_date: 2025-08-07
-  end_date: 2025-08-07
+  end_date: 2025-09-07
+  user: two

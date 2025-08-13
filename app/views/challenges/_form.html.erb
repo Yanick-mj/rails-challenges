@@ -1,4 +1,14 @@
+<%# ======================================== %>
+<%# FORMULAIRE PARTIEL POUR LES CHALLENGES %>
+<%# ======================================== %>
+<%# Ce formulaire est utilisé pour créer et modifier des challenges %>
+<%# Il s'adapte automatiquement selon le contexte (nouveau ou édition) %>
+
 <%= form_with(model: @challenge, local: true) do |form| %>
+
+  <%# ======================================== %>
+  <%# AFFICHAGE DES ERREURS DE VALIDATION %>
+  <%# ======================================== %>
   <% if @challenge.errors.any? %>
     <div class="alert alert-danger">
       <h4><%= pluralize(@challenge.errors.count, "erreur") %> :</h4>
@@ -10,23 +20,34 @@
     </div>
   <% end %>
 
+  <%# ======================================== %>
+  <%# CHAMP NOM DU CHALLENGE %>
+  <%# ======================================== %>
   <div class="mb-3">
     <%= form.label :name, "Nom du challenge", class: "form-label" %>
     <%= form.text_field :name, class: "form-control", placeholder: "Entrez le nom du challenge" %>
   </div>
 
+  <%# ======================================== %>
+  <%# CHAMP DESCRIPTION DU CHALLENGE %>
+  <%# ======================================== %>
   <div class="mb-3">
     <%= form.label :description, "Description", class: "form-label" %>
     <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Décrivez le challenge" %>
   </div>
 
+  <%# ======================================== %>
+  <%# CHAMPS DE DATES (DÉBUT ET FIN) %>
+  <%# ======================================== %>
   <div class="row">
+    <%# Date de début du challenge %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= form.label :start_date, "Date de début", class: "form-label" %>
         <%= form.date_field :start_date, class: "form-control" %>
       </div>
     </div>
+    <%# Date de fin du challenge %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= form.label :end_date, "Date de fin", class: "form-label" %>
@@ -35,8 +56,22 @@
     </div>
   </div>
 
+  <%# ======================================== %>
+  <%# BOUTONS D'ACTION DU FORMULAIRE %>
+  <%# ======================================== %>
   <div class="d-flex gap-3">
+    <%# Bouton Annuler - Retour à la liste des challenges %>
     <%= action_button :cancel, challenges_path, "Annuler" %>
-    <%= cta_submit @challenge.new_record? ? "Créer le challenge" : "Mettre à jour", variant: :primary, icon: @challenge.new_record? ? "plus" : "save" %>
+
+    <%# Bouton de soumission - Texte et icône adaptatifs %>
+    <%# Si nouveau challenge : "Créer le challenge" avec icône plus %>
+    <%# Si édition : "Mettre à jour" avec icône save %>
+    <%= cta_submit @challenge.new_record? ? "Créer le challenge" : "Mettre à jour",
+                   variant: :primary,
+                   icon: @challenge.new_record? ? "plus" : "save" %>
   </div>
 <% end %>
+
+<%# ======================================== %>
+<%# FIN DU FORMULAIRE PARTIEL %>
+<%# ======================================== %>

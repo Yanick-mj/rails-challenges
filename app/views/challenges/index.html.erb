@@ -1,24 +1,50 @@
 
+<%# ======================================== %>
+<%# PAGE D'INDEX DES CHALLENGES %>
+<%# ======================================== %>
+<%# Cette page affiche la liste de tous les challenges disponibles %>
+<%# avec options de tri et bouton de création %>
+
 <div class="container mt-5">
+
+  <%# ======================================== %>
+  <%# EN-TÊTE AVEC TITRE ET BOUTON DE CRÉATION %>
+  <%# ======================================== %>
   <div class="d-flex justify-content-between align-items-center mb-4">
+    <%# Titre de la page (défini dans le contrôleur) %>
     <h2><%= @page_title %></h2>
+
+    <%# Bouton de création d'un nouveau challenge %>
     <div class="create-button">
       <%= action_button :create, new_challenge_path, "Challenge" %>
     </div>
   </div>
 
-  <!-- Options de tri simples -->
+  <%# ======================================== %>
+  <%# OPTIONS DE TRI DES CHALLENGES %>
+  <%# ======================================== %>
   <div class="mb-3">
     <div class="btn-group" role="group">
+      <%# Bouton de tri ascendant (du plus ancien au plus récent) %>
       <%= sort_button :asc, challenges_path(sort: 'asc'), class: params[:sort] != 'desc' ? 'active' : '' %>
+
+      <%# Bouton de tri descendant (du plus récent au plus ancien) %>
       <%= sort_button :desc, challenges_path(sort: 'desc'), class: params[:sort] == 'desc' ? 'active' : '' %>
     </div>
   </div>
 
-  <!-- Liste des challenges -->
+  <%# ======================================== %>
+  <%# AFFICHAGE DE LA LISTE DES CHALLENGES %>
+  <%# ======================================== %>
   <% if @challenges.empty? %>
+    <%# État vide - Aucun challenge disponible %>
     <p>No challenges available at the moment.</p>
   <% else %>
+    <%# Rendu du partial _challenges_list.html.erb avec la liste des challenges %>
     <%= render partial: 'challenges_list', locals: { challenges: @challenges } %>
   <% end %>
 </div>
+
+<%# ======================================== %>
+<%# FIN DE LA PAGE D'INDEX %>
+<%# ======================================== %>

@@ -8,20 +8,22 @@
         <!-- Bouton retour et icône avec espacement approprié -->
         <div class="d-flex justify-content-between  ">
           <div class="d-flex justify-content-center">
-            <%= icon('user-edit', 'fa-2x') %>
+
+            <%= user_avatar(resource.persisted? ? resource : nil, {}, size: 200) %>
           </div>
           <div class="flex-grow-1"></div> <!-- Espace vide pour équilibrer -->
           </div>
         <h2>Modifier le profil</h2>
-        <p class="auth-subtitle">Mettez à jour vos informations personnelles</p>
       </div>
 
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form", multipart: true }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
         <%= user_form_fields(f,
           show_name_fields: true,
-          autofocus_email: true
+          autofocus_email: true,
+          show_avatar: true,
+          current_avatar: resource.persisted? ? resource.avatar : nil
         ) %>
 
         <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>

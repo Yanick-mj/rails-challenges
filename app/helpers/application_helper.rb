@@ -20,6 +20,8 @@ module ApplicationHelper
   def user_form_fields(form, options = {})
     show_name_fields = options[:show_name_fields] || false
     autofocus_email = options[:autofocus_email] || false
+    show_avatar = options[:show_avatar] || false
+    current_avatar = options[:current_avatar] || nil
 
     html = []
 
@@ -63,7 +65,116 @@ module ApplicationHelper
       end
     end
 
+    # Champ avatar DRY
+    if show_avatar
+      html << avatar_field(form, current_avatar)
+    end
+
     html.join.html_safe
+  end
+
+  # Helper DRY pour le champ avatar
+  def avatar_field(form, current_avatar = nil)
+    content_tag(:div, class: "form-group mb-3") do
+      html = []
+
+      # Label
+      html << content_tag(:label, class: "form-label") do
+        concat(icon("camera", "me-2"))
+        concat("Photo de profil")
+        concat(content_tag(:span, " (optionnel)", class: "text-muted")) if current_avatar.nil?
+      end
+
+      # Avatar actuel (si édition)
+      if current_avatar&.attached? && current_avatar.blob&.key.present?
+        html << content_tag(:div, class: "current-avatar mb-3") do
+          concat(image_tag(current_avatar,
+                          class: "rounded-circle",
+                          style: "width: 100px; height: 100px; object-fit: cover;"))
+          concat(content_tag(:small, "Avatar actuel", class: "d-block text-muted"))
+        end
+      end
+
+      # Champ fichier
+      html << form.file_field(:avatar,
+        class: "form-control",
+        accept: "image/*",
+        data: {
+          preview_target: "input",
+          action: "change->avatar#preview"
+        })
+
+      # Aide
+      help_text = current_avatar&.attached? ?
+        "Laissez vide pour conserver l'image actuelle" :
+        "Formats acceptés : PNG, JPG, JPEG. Taille max : 5MB"
+
+      html << content_tag(:small, help_text, class: "form-text text-muted")
+
+      # Prévisualisation
+      html << content_tag(:div, class: "avatar-preview mb-3", style: "display: none;") do
+        image_tag("", id: "avatar-preview",
+                 class: "rounded-circle",
+                 style: "width: 100px; height: 100px; object-fit: cover;")
+      end
+
+      concat(html.join.html_safe)
+    end
+  end
+
+  # Helper pour afficher l'avatar utilisateur
+  def user_avatar(user, options = {}, size: 40)
+    # Vérifier que l'utilisateur existe et a un avatar attaché de manière sécurisée
+    if user&.persisted? && user.avatar.attached? && user.avatar.blob&.key.present?
+      begin
+        image_tag user.avatar,
+                  class: "rounded-circle #{options[:class]}",
+                  style: "width: #{size}px; height: #{size}px; object-fit: cover; #{options[:style]}",
+                  alt: "Avatar de #{user_display_name(user)}"
+      rescue => e
+        # En cas d'erreur avec l'avatar, afficher l'icône par défaut
+        Rails.logger.warn "Erreur avec l'avatar de l'utilisateur #{user.id}: #{e.message}"
+        default_avatar_icon(options, size)
+      end
+    else
+      # Avatar par défaut avec icône FontAwesome
+      default_avatar_icon(options, size)
+    end
+  end
+
+  # Helper spécialisé pour l'affichage des participants
+  def participant_avatar(participant, options = {}, size: 48)
+    # Vérifier si le participant a un avatar valide
+    if participant&.persisted? && participant.avatar.attached? && participant.avatar.blob&.key.present?
+      begin
+        image_tag participant.avatar,
+                  class: "rounded-circle #{options[:class]}",
+                  style: "width: #{size}px; height: #{size}px; object-fit: cover; #{options[:style]}",
+                  alt: "Avatar de #{user_display_name(participant)}",
+                  loading: "lazy"
+      rescue => e
+        Rails.logger.warn "Erreur avec l'avatar du participant #{participant.id}: #{e.message}"
+        participant_default_avatar(options, size)
+      end
+    else
+      participant_default_avatar(options, size)
+    end
+  end
+
+  private
+
+  def default_avatar_icon(options, size)
+    content_tag :div,
+                icon("user"),
+                class: "rounded-circle bg-primary text-white d-flex align-items-center justify-content-center #{options[:class]}",
+                style: "width: #{size}px; height: #{size}px; font-size: #{size * 0.4}px; #{options[:style]}"
+  end
+
+  def participant_default_avatar(options, size)
+    content_tag :div,
+                icon("user"),
+                class: "rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center #{options[:class]}",
+                style: "width: #{size}px; height: #{size}px; font-size: #{size * 0.4}px; #{options[:style]}"
   end
 
   # Helper pour les classes CSS des messages flash
@@ -98,13 +209,6 @@ module ApplicationHelper
   def participation_button(challenge)
     return unless user_signed_in?
 
-    # Ne pas afficher le bouton si l'utilisateur est le créateur
-    if challenge.user == current_user
-      return content_tag :div, class: "text-center text-muted" do
-        icon("crown") + " Vous êtes le créateur de ce challenge"
-      end
-    end
-
     if challenge.participants.include?(current_user)
       # L'utilisateur participe déjà
       button_to leave_challenge_path(challenge),
@@ -136,7 +240,6 @@ module ApplicationHelper
   # Helper pour le bouton de participation compact (pour les cards)
   def participation_button_compact(challenge)
     return unless user_signed_in?
-    return if challenge.user == current_user
 
     if challenge.participants.include?(current_user)
       # L'utilisateur participe déjà - bouton quitter compact
@@ -151,35 +254,31 @@ module ApplicationHelper
       button_to participate_challenge_path(challenge),
                 method: :post,
                 class: "btn btn-success btn-sm" do
-        icon("user-plus") + " Participer"
+        icon("user-plus") + " Rejoindre"
+      end
+    elsif challenge.full?
+      # Challenge complet
+      content_tag :span, class: "badge bg-danger" do
+        icon("lock") + " Complet"
       end
     else
-      # Challenge complet ou autre raison
-      content_tag :button,
-                  icon("user-times") + " Complet",
-                  class: "btn btn-secondary btn-sm",
-                  disabled: true
+      # Autre raison
+      content_tag :span, class: "badge bg-secondary" do
+        icon("user-times") + " Indisponible"
+      end
     end
   end
 
-  # Helper pour afficher les dates d'un challenge
+  # Helper pour afficher les dates des challenges
   def challenge_dates_display(challenge, format: :compact)
     case format
     when :compact
-      content_tag :div, class: "row g-2 mb-3" do
-        concat(content_tag(:div, class: "col-md-6") do
-          content_tag(:small, class: "text-dark") do
-            icon("calendar-plus", "text-success me-1") + "Début: #{challenge.start_date&.strftime("%d/%m/%Y")}"
-          end
-        end)
-        concat(content_tag(:div, class: "col-md-6") do
-          content_tag(:small, class: "text-dark") do
-            icon("calendar-check", "text-danger me-1") + "Fin: #{challenge.end_date&.strftime("%d/%m/%Y")}"
-          end
-        end)
+      content_tag(:div, class: "d-flex align-items-center text-muted small") do
+        concat(icon("calendar-alt", "me-1"))
+        concat("Du #{challenge.start_date.strftime('%d/%m/%Y')} au #{challenge.end_date.strftime('%d/%m/%Y')}")
       end
     when :detailed
-      content_tag :div, class: "row g-4" do
+      content_tag(:div, class: "row g-4") do
         concat(content_tag(:div, class: "col-md-4") do
           content_tag(:div, class: "d-flex align-items-center p-3 bg-light rounded") do
             concat(content_tag(:div, class: "me-3") do
@@ -209,7 +308,7 @@ module ApplicationHelper
             end)
             concat(content_tag(:div) do
               concat(content_tag(:small, "Participants", class: "text-dark d-block"))
-              concat(content_tag(:strong, participants_counter(challenge), class: "fs-6"))
+              concat(content_tag(:strong, "#{challenge.participants.count}/10", class: "fs-6"))
             end)
           end
         end)
@@ -217,7 +316,7 @@ module ApplicationHelper
     end
   end
 
-  # Composants CTA unifiés et DRY
+  # Helpers pour les boutons CTA
   def cta_button(text, url = nil, options = {})
     variant = options.delete(:variant) || :primary
     size = options.delete(:size) || :md
