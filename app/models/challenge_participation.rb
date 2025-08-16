@@ -21,6 +21,8 @@ class ChallengeParticipation < ApplicationRecord
   end
 
   def challenge_not_full
+    return unless challenge # Skip validation if challenge is nil
+
     if challenge.participants.count >= challenge.max_participants
       errors.add(:base, "Ce challenge est complet (#{challenge.max_participants} participants maximum)")
     end

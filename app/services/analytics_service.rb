@@ -14,16 +14,21 @@ class AnalyticsService
       }
 
       # Fusionner les propriétés de base avec les propriétés spécifiques
-      event_properties = base_properties.merge(properties)
+      event_properties = base_properties.merge(properties || {})
 
       # Track l'événement
-      $mixpanel.track(user&.id || "anonymous", event_name, event_properties)
+      track_event_with_mixpanel(user&.id || "anonymous", event_name, event_properties)
 
       # Log en développement
       if Rails.env.development?
         Rails.logger.info "📊 ANALYTICS: #{event_name} - #{event_properties}"
         puts "📊 ANALYTICS: #{event_name} envoyé à Mixpanel"
       end
+    end
+
+    # Méthode séparée pour permettre le mocking dans les tests
+    def track_event_with_mixpanel(user_id, event_name, properties)
+      $mixpanel.track(user_id, event_name, properties)
     end
 
     # ========================================
