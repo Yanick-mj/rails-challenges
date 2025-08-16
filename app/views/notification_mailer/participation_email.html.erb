@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <% if @action == 'joined' %>
+      <h1>Vous avez rejoint le challenge !</h1>
+      <p>
+        Bonjour <%= @user.name.present? ? @user.name : @user.email %>,
+      </p>
+      <p>
+        Félicitations ! Vous avez rejoint le challenge "<strong><%= @challenge.name %></strong>".
+      </p>
+      <p>
+        Le challenge commence le <%= @challenge.start_date.strftime("%d/%m/%Y") %> et se termine le <%= @challenge.end_date.strftime("%d/%m/%Y") %>.
+      </p>
+    <% else %>
+      <h1>Vous avez quitté le challenge</h1>
+      <p>
+        Bonjour <%= @user.name.present? ? @user.name : @user.email %>,
+      </p>
+      <p>
+        Vous avez quitté le challenge "<strong><%= @challenge.name %></strong>".
+      </p>
+    <% end %>
+
+    <h2>Détails du challenge :</h2>
+    <ul>
+      <li><strong>Nom :</strong> <%= @challenge.name %></li>
+      <li><strong>Description :</strong> <%= @challenge.description %></li>
+      <li><strong>Date de début :</strong> <%= @challenge.start_date.strftime("%d/%m/%Y") %></li>
+      <li><strong>Date de fin :</strong> <%= @challenge.end_date.strftime("%d/%m/%Y") %></li>
+      <li><strong>Participants actuels :</strong> <%= @challenge.participants.count %>/<%= @challenge.max_participants %></li>
+    </ul>
+
+    <p>
+      <a href="<%= @url %>">Voir le challenge</a>
+    </p>
+
+    <% if @action == 'joined' %>
+      <p>Bonne chance pour votre challenge !</p>
+    <% else %>
+      <p>Nous espérons vous revoir bientôt !</p>
+    <% end %>
+  </body>
+</html>

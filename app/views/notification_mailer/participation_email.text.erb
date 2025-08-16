@@ -1,0 +1,30 @@
+<% if @action == 'joined' %>
+Vous avez rejoint le challenge !
+
+Bonjour <%= @user.name.present? ? @user.name : @user.email %>,
+
+Félicitations ! Vous avez rejoint le challenge "<%= @challenge.name %>".
+
+Le challenge commence le <%= @challenge.start_date.strftime("%d/%m/%Y") %> et se termine le <%= @challenge.end_date.strftime("%d/%m/%Y") %>.
+<% else %>
+Vous avez quitté le challenge
+
+Bonjour <%= @user.name.present? ? @user.name : @user.email %>,
+
+Vous avez quitté le challenge "<%= @challenge.name %>".
+<% end %>
+
+Détails du challenge :
+- Nom : <%= @challenge.name %>
+- Description : <%= @challenge.description %>
+- Date de début : <%= @challenge.start_date.strftime("%d/%m/%Y") %>
+- Date de fin : <%= @challenge.end_date.strftime("%d/%m/%Y") %>
+- Participants actuels : <%= @challenge.participants.count %>/<%= @challenge.max_participants %>
+
+Voir le challenge : <%= @url %>
+
+<% if @action == 'joined' %>
+Bonne chance pour votre challenge !
+<% else %>
+Nous espérons vous revoir bientôt !
+<% end %>

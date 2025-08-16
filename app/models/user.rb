@@ -14,7 +14,27 @@ class User < ApplicationRecord
   # Validations pour l'avatar
   validate :acceptable_avatar
 
+  # Callbacks pour les notifications
+  after_commit :send_welcome_email, on: :create
+
+  # Méthode pour obtenir le nom complet
+  def name
+    if first_name.present? && last_name.present?
+      "#{first_name} #{last_name}"
+    elsif first_name.present?
+      first_name
+    elsif last_name.present?
+      last_name
+    else
+      nil
+    end
+  end
+
   private
+
+  def send_welcome_email
+    NotificationMailer.welcome_email(self).deliver_later
+  end
 
   def acceptable_avatar
     return unless avatar.attached?
@@ -23,7 +43,7 @@ class User < ApplicationRecord
       errors.add(:avatar, "est trop volumineux (5MB maximum)")
     end
 
-    acceptable_types = ["image/png", "image/jpeg", "image/jpg"]
+    acceptable_types = [ "image/png", "image/jpeg", "image/jpg" ]
     unless acceptable_types.include?(avatar.content_type)
       errors.add(:avatar, "doit être une image PNG, JPEG ou JPG")
     end

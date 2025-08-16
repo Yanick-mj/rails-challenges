@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Bienvenue sur Rails Challenge, <%= @user.name.present? ? @user.name : @user.email %> !</h1>
+    <p>
+      Votre compte a été créé avec succès. Vous pouvez maintenant créer et participer à des challenges.
+    </p>
+    <p>
+      Pour commencer, visitez notre site : <%= link_to @url, @url %>
+    </p>
+    <p>Merci de nous rejoindre !</p>
+  </body>
+</html>

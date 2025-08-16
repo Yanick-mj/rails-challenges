@@ -81,8 +81,8 @@ puts "   - user1@example.com / password"
 puts "   - user2@example.com / password"
 
 puts "\n🎯 Test scenarios:"
-puts "   - Challenge 1: #{challenge1.participants.count}/10 participants"
-puts "   - Challenge 2: #{challenge2.participants.count}/10 participants"
-puts "   - Challenge 3: #{challenge3.participants.count}/10 participants (empty)"
+puts "   - Challenge 1: #{challenge1.participants.count}/#{challenge1.max_participants} participants"
+puts "   - Challenge 2: #{challenge2.participants.count}/#{challenge2.max_participants} participants"
+puts "   - Challenge 3: #{challenge3.participants.count}/#{challenge3.max_participants} participants (empty)"
 
 puts "\n🚀 Ready to test! Run: rails server"

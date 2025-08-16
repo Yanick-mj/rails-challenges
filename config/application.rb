@@ -6,6 +6,12 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Charger les variables d'environnement depuis .env si le fichier existe
+if File.exist?(File.join(__dir__, '..', '.env'))
+  require 'dotenv'
+  Dotenv.load(File.join(__dir__, '..', '.env'))
+end
+
 module RailsChallenge
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -23,5 +29,8 @@ module RailsChallenge
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Configuration Active Job pour l'envoi d'emails en arrière-plan
+    config.active_job.queue_adapter = :solid_queue
   end
 end

@@ -1,0 +1,16 @@
+Challenge créé avec succès !
+
+Bonjour <%= @user.name.present? ? @user.name : @user.email %>,
+
+Votre challenge "<%= @challenge.name %>" a été créé avec succès.
+
+Détails du challenge :
+- Nom : <%= @challenge.name %>
+- Description : <%= @challenge.description %>
+- Date de début : <%= @challenge.start_date.strftime("%d/%m/%Y") %>
+- Date de fin : <%= @challenge.end_date.strftime("%d/%m/%Y") %>
+- Participants maximum : <%= @challenge.max_participants %>
+
+Voir votre challenge : <%= @url %>
+
+Bonne chance pour votre challenge !

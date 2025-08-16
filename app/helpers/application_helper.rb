@@ -195,7 +195,7 @@ module ApplicationHelper
 
   # Helper pour afficher le compteur de participants
   def participants_counter(challenge)
-    counter = "#{challenge.participants.count}/10"
+    counter = "#{challenge.participants.count}/#{challenge.max_participants}"
 
     # Ajouter un indicateur si l'utilisateur participe
     if user_signed_in? && challenge.participants.include?(current_user)
@@ -203,6 +203,11 @@ module ApplicationHelper
     end
 
     counter
+  end
+
+  # Helper DRY pour afficher juste le compteur de participants (sans texte supplémentaire)
+  def participants_count_display(challenge)
+    "#{challenge.participants.count}/#{challenge.max_participants}"
   end
 
   # Helper pour le bouton de participation
@@ -227,7 +232,7 @@ module ApplicationHelper
     elsif challenge.full?
       # Challenge complet
       content_tag :div, class: "text-center text-muted" do
-        icon("users") + " Challenge complet (10/10 participants)"
+        icon("users") + " Challenge complet (#{challenge.participants.count}/#{challenge.max_participants} participants)"
       end
     else
       # Autre raison (déjà participé, etc.)
@@ -308,7 +313,7 @@ module ApplicationHelper
             end)
             concat(content_tag(:div) do
               concat(content_tag(:small, "Participants", class: "text-dark d-block"))
-              concat(content_tag(:strong, "#{challenge.participants.count}/10", class: "fs-6"))
+              concat(content_tag(:strong, participants_count_display(challenge), class: "fs-6"))
             end)
           end
         end)

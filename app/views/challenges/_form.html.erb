@@ -44,16 +44,48 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= form.label :start_date, "Date de début", class: "form-label" %>
-        <%= form.date_field :start_date, class: "form-control" %>
+        <%= form.date_field :start_date,
+                           class: "form-control",
+                           min: Date.current.to_s,
+                           value: @challenge.start_date&.to_s || Date.current.to_s %>
+        <div class="form-text">
+          <i class="fas fa-info-circle me-1"></i>
+          La date de début ne peut pas être dans le passé
+        </div>
       </div>
     </div>
     <%# Date de fin du challenge %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= form.label :end_date, "Date de fin", class: "form-label" %>
-        <%= form.date_field :end_date, class: "form-control" %>
+        <%= form.date_field :end_date,
+                           class: "form-control",
+                           min: @challenge.start_date&.to_s || Date.current.to_s %>
+        <div class="form-text">
+          <i class="fas fa-info-circle me-1"></i>
+          La date de fin doit être après la date de début
+        </div>
       </div>
     </div>
+  </div>
+
+  <%# ======================================== %>
+  <%# CHAMP NOMBRE MAXIMUM DE PARTICIPANTS %>
+  <%# ======================================== %>
+  <div class="mb-3">
+    <%= form.label :max_participants, "Nombre maximum de participants", class: "form-label" %>
+    <%= form.number_field :max_participants,
+                         class: "form-control",
+                         min: 1,
+                         max: 100,
+                         placeholder: "Entrez le nombre maximum de participants" %>
+    <% if @challenge.persisted? %>
+      <div class="form-text">
+        <i class="fas fa-info-circle me-1"></i>
+        Actuellement <%= @challenge.participants.count %> participant(s).
+        Vous ne pouvez pas réduire en dessous de ce nombre.
+      </div>
+    <% end %>
   </div>
 
   <%# ======================================== %>
@@ -75,3 +107,24 @@
 <%# ======================================== %>
 <%# FIN DU FORMULAIRE PARTIEL %>
 <%# ======================================== %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const startDateField = document.querySelector('input[name="challenge[start_date]"]');
+  const endDateField = document.querySelector('input[name="challenge[end_date]"]');
+
+  if (startDateField && endDateField) {
+    // Mettre à jour la date de fin minimale quand la date de début change
+    startDateField.addEventListener('change', function() {
+      const startDate = this.value;
+      if (startDate) {
+        endDateField.min = startDate;
+        // Si la date de fin actuelle est avant la nouvelle date de début, la réinitialiser
+        if (endDateField.value && endDateField.value < startDate) {
+          endDateField.value = startDate;
+        }
+      }
+    });
+  }
+});
+</script>

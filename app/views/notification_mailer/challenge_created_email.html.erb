@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Challenge créé avec succès !</h1>
+    <p>
+      Bonjour <%= @user.name.present? ? @user.name : @user.email %>,
+    </p>
+    <p>
+      Votre challenge "<strong><%= @challenge.name %></strong>" a été créé avec succès.
+    </p>
+
+    <h2>Détails du challenge :</h2>
+    <ul>
+      <li><strong>Nom :</strong> <%= @challenge.name %></li>
+      <li><strong>Description :</strong> <%= @challenge.description %></li>
+      <li><strong>Date de début :</strong> <%= @challenge.start_date.strftime("%d/%m/%Y") %></li>
+      <li><strong>Date de fin :</strong> <%= @challenge.end_date.strftime("%d/%m/%Y") %></li>
+      <li><strong>Participants maximum :</strong> <%= @challenge.max_participants %></li>
+    </ul>
+
+    <p>
+      <a href="<%= @url %>">Voir votre challenge</a>
+    </p>
+
+    <p>Bonne chance pour votre challenge !</p>
+  </body>
+</html>
