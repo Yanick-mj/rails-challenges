@@ -1,52 +1,76 @@
 #!/usr/bin/env bash
 
-echo "🔍 Vérification post-déploiement..."
+echo "🔍 Vérification post-déploiement Heroku..."
 echo ""
 
 # 1. Vérifier que l'application répond
 echo "🌐 Test de l'application..."
-if curl -s https://rails-challenge-88c078717b10.herokuapp.com/up | grep -q "green"; then
-  echo "✅ Application accessible"
+if curl -f -s https://$HEROKU_APP_NAME.herokuapp.com/up > /dev/null; then
+  echo "✅ Application: OK"
 else
-  echo "❌ Application inaccessible"
+  echo "❌ Application: ÉCHEC"
   exit 1
 fi
 
 echo ""
 
-# 2. Vérifier les migrations
-echo "🗄️  Vérification des migrations..."
-if heroku run rails db:migrate:status | grep -q "up"; then
-  echo "✅ Migrations à jour"
+# 2. Vérifier les dynos
+echo "🚀 Vérification des dynos..."
+if heroku ps --app $HEROKU_APP_NAME | grep -q "web.1.*up"; then
+  echo "✅ Dyno web: OK"
 else
-  echo "⚠️  Migrations en attente"
-  echo "Exécution des migrations..."
-  heroku run rails db:migrate
-fi
-
-echo ""
-
-# 3. Vérifier les données de test
-echo "🌱 Vérification des données..."
-if heroku run rails runner "puts Challenge.count" | grep -q "[0-9]"; then
-  echo "✅ Données présentes"
-else
-  echo "⚠️  Aucune donnée trouvée"
-  echo "Exécution des seeds..."
-  heroku run rails db:seed
-fi
-
-echo ""
-
-# 4. Test de la page d'accueil
-echo "🏠 Test de la page d'accueil..."
-if curl -s https://rails-challenge-88c078717b10.herokuapp.com/ | grep -q "challenge"; then
-  echo "✅ Page d'accueil fonctionnelle"
-else
-  echo "❌ Erreur sur la page d'accueil"
+  echo "❌ Dyno web: ÉCHEC"
   exit 1
+fi
+
+if heroku ps --app $HEROKU_APP_NAME | grep -q "worker.1.*up"; then
+  echo "✅ Dyno worker: OK"
+else
+  echo "❌ Dyno worker: ÉCHEC"
+  exit 1
+fi
+
+echo ""
+
+# 3. Vérifier les variables d'environnement
+echo "🔧 Vérification des variables d'environnement..."
+if heroku config:get SMTP_USERNAME --app $HEROKU_APP_NAME | grep -q .; then
+  echo "✅ SMTP_USERNAME: OK"
+else
+  echo "❌ SMTP_USERNAME: MANQUANT"
+  exit 1
+fi
+
+if heroku config:get SMTP_PASSWORD --app $HEROKU_APP_NAME | grep -q .; then
+  echo "✅ SMTP_PASSWORD: OK"
+else
+  echo "❌ SMTP_PASSWORD: MANQUANT"
+  exit 1
+fi
+
+if heroku config:get APP_HOST --app $HEROKU_APP_NAME | grep -q .; then
+  echo "✅ APP_HOST: OK"
+else
+  echo "❌ APP_HOST: MANQUANT"
+  exit 1
+fi
+
+echo ""
+
+# 4. Vérifier les logs pour les erreurs
+echo "📋 Vérification des logs..."
+if heroku logs --tail --app $HEROKU_APP_NAME --num 50 | grep -q "error\|Error\|ERROR"; then
+  echo "⚠️  Erreurs détectées dans les logs"
+  echo "Consultez: heroku logs --tail --app $HEROKU_APP_NAME"
+else
+  echo "✅ Logs: OK"
 fi
 
 echo ""
 echo "🎉 Vérification post-déploiement terminée !"
-echo "✅ L'application est opérationnelle."
+echo ""
+echo "📋 Commandes utiles:"
+echo "   heroku logs --tail --app $HEROKU_APP_NAME"
+echo "   heroku run rails console --app $HEROKU_APP_NAME"
+echo "   heroku run rails db:migrate --app $HEROKU_APP_NAME"
+echo "   heroku run rails db:seed --app $HEROKU_APP_NAME"

@@ -12,10 +12,34 @@
     "RAILS_MASTER_KEY": {
       "description": "A secret key for verifying the integrity of signed cookies.",
       "generator": "secret"
+    },
+    "SMTP_USERNAME": {
+      "description": "Gmail username for sending emails",
+      "required": true
+    },
+    "SMTP_PASSWORD": {
+      "description": "Gmail app password for sending emails",
+      "required": true
+    },
+    "APP_HOST": {
+      "description": "Your Heroku app domain (e.g., your-app.herokuapp.com)",
+      "required": true
+    },
+    "RAILS_ENV": {
+      "description": "Rails environment",
+      "value": "production"
+    },
+    "RAILS_LOG_TO_STDOUT": {
+      "description": "Log to stdout for Heroku",
+      "value": "true"
     }
   },
   "formation": {
     "web": {
+      "quantity": 1,
+      "size": "basic"
+    },
+    "worker": {
       "quantity": 1,
       "size": "basic"
     }
@@ -24,5 +48,8 @@
     {
       "url": "heroku/ruby"
     }
-  ]
+  ],
+  "scripts": {
+    "postdeploy": "bundle exec rails db:migrate"
+  }
 }
